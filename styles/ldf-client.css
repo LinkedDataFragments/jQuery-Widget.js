@@ -1,31 +1,75 @@
-/* ©2013 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
+/* ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
 
 html, textarea, button {
-  font: 11pt/1.4 "Helvetiva Neue", Helvetica, Arial, sans-serif;
+  font: 11pt/1.4 'Open Sans', Verdana, Arial, sans-serif;
+  outline: none;
 }
 
 body {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 650px;
+  margin: 2em auto;
 }
 
-.ldf-client .query {
+a, button, label {
+  color: #be1622;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+button:disabled {
+  color: gray;
+}
+
+header h1 {
+  margin: .7em 0 0;
+}
+header p {
+  font-weight: bold;
+  margin: 0 0 3em;
+}
+header .logo {
+  float: right;
+}
+header img {
+  max-width: 160px;
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+}
+
+label {
+  display: block;
+  margin: 2em 0 .5em;
+}
+
+footer {
+  font-size: .8em;
+  margin-top: 2em;
+}
+
+textarea {
   width: 100%;
   min-height: 10em;
+  border: none;
+  cursor: pointer;
+}
+textarea:hover {
+  color: #be1622;
 }
 
-.ldf-client pre {
+pre {
   width: 100%;
   height: 20em;
   font-size: 9pt;
   overflow: scroll;
-  border: 1px solid;
+  margin: 0;
 }
 
-.ldf-client .log {
+.log {
   color: #666;
-}
-
-.ldf-client button {
-  font-weight: bold;
 }

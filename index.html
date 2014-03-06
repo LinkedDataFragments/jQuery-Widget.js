@@ -16,20 +16,52 @@
     });
   </script>
   <link rel="stylesheet" href="styles/ldf-client.css" />
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,700italic,400,700" rel=stylesheet>
 </head>
 <body>
-  <h1>Linked Data Fragments client</h1>
-  <fieldset class="ldf-client">
-    <textarea class="query">
+  <header>
+    <a class="logo" href="http://linkeddatafragments.org/">
+      <img src="http://linkeddatafragments.org/images/logo.svg" alt="" />
+    </a>
+    <h1>Linked Data Fragments client</h1>
+    <p class="abstract">
+      Enter a basic graph pattern query below
+      and see how your browser solves it using only
+      <a href="http://linkeddatafragments.org/concept/" target="_blank">Basic Linked Data Fragments</a>.
+    </p>
+  </header>
+  <main>
+    <fieldset class="ldf-client">
+      <label>SPARQL query</label>
+      <textarea class="query">
 SELECT ?p, ?c WHERE {
     ?p a <http://dbpedia.org/ontology/Artist>.
     ?p <http://dbpedia.org/ontology/birthPlace> ?c.
     ?c <http://xmlns.com/foaf/0.1/name> "York"@en.
 }
-    </textarea>
-    <button class="execute">Execute query</button>
-    <pre class="results"></pre>
-    <pre class="log"></pre>
-  </fieldset>
+      </textarea>
+      <p><button class="execute">Execute query</button></p>
+
+      <label>Query results</label>
+      <pre class="results"></pre>
+
+      <label>Execution log</label>
+      <pre class="log"></pre>
+    </fieldset>
+
+    <p>
+      Discover how <a href="http://linkeddatafragments.org" target="_blank">Linked Data Fragments</a>
+      enable Web-scale querying of Linked Data.
+    </p>
+  </main>
+
+  <footer>
+    <p>
+      ©2013–2014
+      <a href="http://multimedialab.elis.ugent.be/" target="_blank">Multimedia Lab</a>,
+      <a href="http://www.ugent.be/" target="_blank">Ghent University</a> –
+      <a href="http://www.iminds.be/" target="_blank">iMinds</a>, Belgium
+    </p>
+  </footer>
 </body>
 </html>
