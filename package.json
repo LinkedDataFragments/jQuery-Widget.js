@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "postinstall": "cd node_modules/ldf-client; npm install; npm run browser"
+  },
+  "dependencies": {
+    "ldf-client": ">=0.2.2"
+  }
+}
