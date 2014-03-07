@@ -1,0 +1,15 @@
+# Artists from Ghent, Belgium
+CONSTRUCT {
+  ?person a dbpedia-owl:Artist;
+          rdfs:label ?name;
+          dbpedia-owl:birthPlace ?city.
+}
+WHERE {
+  ?person a dbpedia-owl:Artist;
+          rdfs:label ?name;
+          dbpedia-owl:birthPlace ?city.
+  ?city rdfs:label ?cityName;
+        rdfs:label "Ghent"@en;
+        dbpedia-owl:country ?country.
+  ?country rdfs:label "Belgium"@en.
+}
