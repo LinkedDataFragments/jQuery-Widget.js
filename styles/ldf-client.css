@@ -41,10 +41,13 @@ fieldset {
   border: none;
   padding: 0;
 }
+fieldset p {
+  margin: 0;
+}
 
 label {
   display: block;
-  margin: 2em 0 .5em;
+  padding: 2em .5em .5em 0;
 }
 
 footer {
@@ -68,8 +71,20 @@ pre {
   font-size: 9pt;
   overflow: scroll;
   margin: 0;
+  white-space: pre-wrap;
 }
 
 .log {
   color: #666;
+}
+
+.examples {
+  float: right;
+  padding: 2em 0;
+}
+.examples label {
+  display: inline;
+}
+select {
+  min-width: 250px;
 }

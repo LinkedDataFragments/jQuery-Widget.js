@@ -21,7 +21,9 @@ var queries = queryFiles.map(function (queryFile) {
     query = lines.join('\n');
   }
 
-  return { name: key, sparql: query };
+  return { name: key, sparql: query.trim() };
 });
+// Sort by name
+queries.sort(function (a, b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
 
 fs.writeFileSync(outputFile, JSON.stringify(queries));

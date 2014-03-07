@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -7,14 +8,7 @@
   <script src="scripts/ldf-client.js"></script>
   <script src="scripts/ldf-client-ui.js"></script>
   <script src="scripts/prefixes.js"></script>
-  <script>
-    // Set the configuration of the Linked Data Fragments Client.
-    var ldfConfig = { datasource: 'http://data.linkeddatafragments.org/dbpedia', prefixes: prefixes };
-    // Activate the UI for the .ldf-client element on load.
-    jQuery(function ($) {
-      new LinkedDataFragmentsClientUI($('.ldf-client'), ldfConfig).activate();
-    });
-  </script>
+  <script src="scripts/ldf-client-init.js"></script>
   <link rel="stylesheet" href="styles/ldf-client.css" />
   <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,700italic,400,700" rel=stylesheet>
 </head>
@@ -32,15 +26,14 @@
   </header>
   <main>
     <fieldset class="ldf-client">
-      <label>SPARQL query</label>
-      <textarea class="query">
-SELECT ?p, ?c WHERE {
-    ?p a <http://dbpedia.org/ontology/Artist>.
-    ?p <http://dbpedia.org/ontology/birthPlace> ?c.
-    ?c <http://xmlns.com/foaf/0.1/name> "York"@en.
-}
-      </textarea>
-      <p><button class="execute">Execute query</button></p>
+      <div class="examples">
+        <label>…or choose an example</label>
+        <select class="queries"></select>
+      </div>
+
+      <label>Enter a SPARQL query</label>
+      <textarea class="query"></textarea>
+      <p><button class="execute">Answer using Web data</button></p>
 
       <label>Query results</label>
       <pre class="results"></pre>
