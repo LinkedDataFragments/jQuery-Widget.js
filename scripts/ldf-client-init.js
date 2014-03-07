@@ -11,7 +11,7 @@ jQuery(function ($) {
   $.getJSON('queries.json', function (queries) {
     var $queries = $('.queries'), $query = $('.query');
     $queries.append(queries.map(function (query) {
-      return $('<option>', { value: query.sparql, text: query.name });
+      return $('<option>', { value: query.sparql, title: query.sparql, text: query.name });
     }));
     $queries.change(function () { $query.val($queries.val()); });
     // Load an example query if the query field is empty
@@ -23,4 +23,5 @@ jQuery(function ($) {
   var $datasource = $('.datasource');
   $datasource.change(function () { ldfUI.config.datasource = $datasource.val(); });
   $datasource.change();
+  $datasource.children().each(function () { this.title = this.value; });
 });
