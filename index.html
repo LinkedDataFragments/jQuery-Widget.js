@@ -33,6 +33,15 @@
 
       <label>Enter a SPARQL query</label>
       <textarea class="query"></textarea>
+
+      <div class="datasources">
+        <label>data source</label>
+        <select class="datasource">
+          <option value="http://data.linkeddatafragments.org/dbpedia" selected>DBpedia Basic Linked Data Fragments</option>
+          <option value="http://data.linkeddatafragments.org/dbpedia-virtuoso">DBpedia Basic LDFs (through Virtuoso)</option>
+          <option value="http://data-cdn.linkeddatafragments.org/dbpedia">DBpedia Basic LDFs (cloud cached)</option>
+        </select>
+      </div>
       <p><button class="execute">Answer using Web data</button></p>
 
       <label>Query results</label>

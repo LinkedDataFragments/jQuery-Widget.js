@@ -3,8 +3,9 @@
 
 jQuery(function ($) {
   // Initialize the client
-  var ldfConfig = { datasource: 'http://data.linkeddatafragments.org/dbpedia', prefixes: prefixes };
-  new LinkedDataFragmentsClientUI($('.ldf-client'), ldfConfig).activate();
+  var ldfConfig = { prefixes: prefixes },
+      ldfUI = new LinkedDataFragmentsClientUI($('.ldf-client'), ldfConfig);
+  ldfUI.activate();
 
   // Load the example queries
   $.getJSON('queries.json', function (queries) {
@@ -17,4 +18,9 @@ jQuery(function ($) {
     if ($query.val() === '')
       $queries.change();
   });
+
+  // Allow data source selection
+  var $datasource = $('.datasource');
+  $datasource.change(function () { ldfUI.config.datasource = $datasource.val(); });
+  $datasource.change();
 });

@@ -60,6 +60,7 @@ textarea {
   min-height: 10em;
   border: none;
   cursor: pointer;
+  margin: 0 0 1em;
 }
 textarea:hover {
   color: #be1622;
@@ -78,11 +79,14 @@ pre {
   color: #666;
 }
 
-.examples {
+.examples, .datasources {
   float: right;
   padding: 2em 0;
 }
-.examples label {
+.datasources {
+  padding: .3em 0;
+}
+div > label {
   display: inline;
 }
 select {
