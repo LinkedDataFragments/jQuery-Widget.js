@@ -1,0 +1,6 @@
+# People born in UK cities with airports
+SELECT ?person WHERE {
+  [ a dbpedia-owl:Airport ] dbpedia-owl:city ?city.
+  ?city dbpedia-owl:country dbpedia:United_Kingdom.
+  ?person dbpedia-owl:birthPlace ?city.
+}

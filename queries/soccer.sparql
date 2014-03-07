@@ -1,0 +1,10 @@
+# Soccer players born in their club's city
+SELECT ?clubName, ?playerName WHERE {
+  ?club a dbpedia-owl:SoccerClub;
+        dbpedia-owl:ground ?city;
+        rdfs:label ?clubName.
+  ?player dbpedia-owl:team ?club;
+          dbpedia-owl:birthPlace ?city;
+          rdfs:label ?playerName.
+  ?city dbpedia-owl:country dbpedia:Spain.
+}
