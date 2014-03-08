@@ -1,3 +1,4 @@
 node_modules
 *.log
 queries.json
+build

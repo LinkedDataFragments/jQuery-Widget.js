@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+/*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
+/* Builds the minified HTML and JavaScript. */
+
+var fs = require('fs'),
+    UglifyJS = require("uglify-js"),
+    UglifyCSS = require('uglifycss');;
+
+var sourceDir = __dirname + '/',
+    outputDir = ensureExists(sourceDir + 'build/'),
+    scriptsDir = ensureExists(outputDir + 'scripts/'),
+    html = fs.readFileSync(__dirname + '/index.html', 'utf8');
+
+// Bundle all scripts into a single script
+var scripts = [], minifiedScript;
+html = html.replace(/\s*<script src="([^"]+)"><\/script>\s*/g, function (match, script) {
+  return scripts.push(__dirname + '/' + script), '';
+});
+html = html.replace('</body>', '<script src="scripts/ldf-client.js"></script></body>');
+minifiedScript = UglifyJS.minify(scripts, { output: { comments: /^!/ } });
+fs.writeFileSync(scriptsDir + 'ldf-client.js', minifiedScript.code);
+
+// Inline the styles
+var style = UglifyCSS.processFiles([sourceDir + '/styles/ldf-client.css'])
+html = html.replace(/<link[^>]*ldf-client[^>]*>/, '\n<style>' + style + '</style>');
+
+// Copy auxiliary files
+copy(sourceDir + 'queries.json', outputDir + 'queries.json');
+
+// Write the output HTML
+fs.writeFileSync(outputDir + 'index.html', html);
+
+// Ensure the path exists
+function ensureExists(path) {
+  if (!fs.existsSync(path))
+    fs.mkdirSync(path);
+  return path;
+}
+
+// Copies the source file to the destination
+function copy(source, destination) {
+  fs.writeFileSync(destination, fs.readFileSync(source));
+}

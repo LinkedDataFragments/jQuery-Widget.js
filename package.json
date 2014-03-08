@@ -4,5 +4,9 @@
   },
   "dependencies": {
     "ldf-client": ">=0.2.2"
+  },
+  "devDependencies": {
+    "uglify-js": ">=2.4.12",
+    "uglifycss": "0.0.8"
   }
 }
