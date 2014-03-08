@@ -92,3 +92,7 @@ div > label {
 select {
   min-width: 250px;
 }
+
+.warning {
+  font-style: italic;
+}
