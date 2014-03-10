@@ -34,7 +34,8 @@ header .logo {
   float: right;
 }
 header img {
-  max-width: 160px;
+  width: 160px;
+  border: none;
 }
 
 fieldset {
