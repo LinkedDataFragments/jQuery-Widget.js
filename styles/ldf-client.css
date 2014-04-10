@@ -69,11 +69,11 @@ textarea:hover {
 
 pre {
   width: 100%;
+  max-width: 650px;
   height: 20em;
   font-size: 9pt;
   overflow: scroll;
   margin: 0;
-  white-space: pre-wrap;
 }
 
 .log {
@@ -92,8 +92,4 @@ div > label {
 }
 select {
   min-width: 250px;
-}
-
-.warning {
-  font-style: italic;
 }

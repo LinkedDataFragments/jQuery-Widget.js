@@ -1,5 +1,5 @@
 # Directors of movies starring Brad Pitt
-SELECT ?title, ?name
+SELECT ?title ?name
 WHERE {
   ?movie dbpprop:starring dbpedia:Brad_Pitt;
          rdfs:label ?title;

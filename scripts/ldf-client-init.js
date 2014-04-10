@@ -21,7 +21,7 @@ jQuery(function ($) {
 
   // Allow start fragment selection
   var $startFragment = $('.startFragment');
-  $startFragment.change(function () { ldfUI.config.datasource = $startFragment.val(); });
+  $startFragment.change(function () { ldfUI.config.startFragment = $startFragment.val(); });
   $startFragment.change();
   $startFragment.children().each(function () { this.title = this.value; });
 });

@@ -1,6 +1,6 @@
 # Population of cities with a waterfall
 SELECT * WHERE {
-  ?waterfall dbpprop:wikiPageUsesTemplate dbpedia:Template:Infobox_waterfall;
+  ?waterfall dbpprop:wikiPageUsesTemplate <http://dbpedia.org/resource/Template:Infobox_waterfall>;
              dbpprop:location ?city.
   ?city dbpprop:populationTotal ?population.
 }
