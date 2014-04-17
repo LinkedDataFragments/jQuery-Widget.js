@@ -19,9 +19,9 @@ jQuery(function ($) {
       $queries.change();
   });
 
-  // Allow data source selection
-  var $datasource = $('.datasource');
-  $datasource.change(function () { ldfUI.config.datasource = $datasource.val(); });
-  $datasource.change();
-  $datasource.children().each(function () { this.title = this.value; });
+  // Allow start fragment selection
+  var $startFragment = $('.startFragment');
+  $startFragment.change(function () { ldfUI.config.datasource = $startFragment.val(); });
+  $startFragment.change();
+  $startFragment.children().each(function () { this.title = this.value; });
 });

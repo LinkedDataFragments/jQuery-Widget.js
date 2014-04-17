@@ -80,11 +80,11 @@ pre {
   color: #666;
 }
 
-.examples, .datasources {
+.examples, .startFragments {
   float: right;
   padding: 2em 0;
 }
-.datasources {
+.startFragments {
   padding: .3em 0;
 }
 div > label {
