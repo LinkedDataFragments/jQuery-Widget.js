@@ -10,5 +10,5 @@ This repository contains a browser version of the [Linked Data Fragments client]
 $ npm install
 $ npm run postinstall # generate the browserified version of ldf-client
 $ ./build-queries # create the JSON version of the example queries
-$ ./build-minifed # create a minified version in ./build/
+$ ./build-minified # create a minified version in ./build/
 ```
