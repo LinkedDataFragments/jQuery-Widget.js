@@ -19,37 +19,42 @@
     </a>
     <h1>Linked Data Fragments client</h1>
     <p class="abstract">
-      Enter a basic graph pattern query below
-      and see how your browser solves it using only
+      Enter or choose a SPARQL query below
+      and see how your browser solves it using only
       <a href="http://linkeddatafragments.org/concept/" target="_blank">Basic Linked Data Fragments</a>.
     </p>
   </header>
   <!--[if lte IE 9]><b>Your browser is unsupported.</b><div style="display:none"><![endif]-->
   <main>
     <fieldset class="ldf-client">
-      <div class="examples">
-        <label>…or choose an example</label>
-        <select class="queries"></select>
-      </div>
+      <ul>
+        <li>
+          <label>Choose a start fragment</label>
+          <select class="startFragments"></select>
+        </li>
 
-      <label>Enter a SPARQL query</label>
-      <textarea class="query"></textarea>
+        <label>Enter a SPARQL query</label>
+        <textarea class="query"></textarea>
 
-      <div class="startFragments">
-        <label>start fragment</label>
-        <select class="startFragment">
-          <option value="http://data.linkeddatafragments.org/dbpedia" selected>DBpedia ?s ?p ?o basic LDF (through HDT)</option>
-          <option value="http://data.linkeddatafragments.org/dbpedia-virtuoso">DBpedia ?s ?p ?o basic LDF (through Virtuoso)</option>
-          <option value="http://data-cdn.linkeddatafragments.org/dbpedia">DBpedia ?s ?p ?o basic LDF (cloud cached)</option>
-        </select>
-      </div>
-      <p><button class="execute">Answer using Web data</button></p>
+        <li>
+          <label>…or choose an example query</label>
+          <select class="queries"></select>
+        </li>
 
-      <label>Query results</label>
-      <pre class="results"></pre>
+        <li>
+          <button class="execute">Answer using Web data</button>
+        </li>
 
-      <label>Execution log</label>
-      <pre class="log"></pre>
+        <li>
+          <label>Query results</label>
+          <pre class="results"></pre>
+        </li>
+
+        <li>
+          <label>Execution log</label>
+          <pre class="log"></pre>
+        </li>
+      </ul>
     </fieldset>
 
     <p>

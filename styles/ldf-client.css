@@ -5,12 +5,19 @@ html, textarea, button {
   outline: none;
 }
 
-body {
-  max-width: 650px;
-  margin: 2em auto;
+html {
+  background: #f6f6f6;
 }
 
-a, button, label {
+body {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 1em 3em;
+  background: white;
+  box-shadow: 2px 2px 15px 0px rgba(50, 50, 50, 0.75);
+}
+
+a, button, button:hover, label {
   color: #be1622;
   cursor: pointer;
   font-weight: bold;
@@ -19,8 +26,21 @@ a, button, label {
 a:hover {
   text-decoration: underline;
 }
+button {
+  font-weight: bold;
+  color: black;
+  background-color: #f6f6f6;
+  border-radius: 3px;
+  padding: 5px 8px;
+  margin-left: -1px;
+  border: 1px solid #999999;
+  cursor: pointer;
+}
 button:disabled {
   color: gray;
+}
+label:after {
+  content: ":";
 }
 
 header h1 {
@@ -42,18 +62,18 @@ fieldset {
   border: none;
   padding: 0;
 }
-fieldset p {
+ul {
+  list-style: none;
+  padding: 0;
   margin: 0;
 }
-
-label {
-  display: block;
-  padding: 2em .5em .5em 0;
+li {
+  margin: .5em 0;
 }
 
-footer {
-  font-size: .8em;
-  margin-top: 2em;
+select {
+  min-width: 390px;
+  float: right;
 }
 
 textarea {
@@ -73,23 +93,14 @@ pre {
   height: 20em;
   font-size: 9pt;
   overflow: scroll;
-  margin: 0;
+  margin: 0 0 1em;
 }
 
 .log {
   color: #666;
 }
 
-.examples, .startFragments {
-  float: right;
-  padding: 2em 0;
-}
-.startFragments {
-  padding: .3em 0;
-}
-div > label {
-  display: inline;
-}
-select {
-  min-width: 250px;
+footer {
+  font-size: .8em;
+  margin-top: 2em;
 }
