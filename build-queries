@@ -2,28 +2,43 @@
 /*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
 /* Builds the query files into a JSON file. */
 
-var fs = require('fs');
+var fs = require('fs'),
+    path = require('path');
 
-var outputFile = __dirname + '/queries.json',
-    queryDir = __dirname + '/queries/',
-    queryFiles = fs.readdirSync(queryDir)
-                   .filter(function (f) { return /\.sparql$/.test(f); });
+var queryDir = path.join(__dirname, '/queries/'),
+    startFragmentsFile = path.join(__dirname, '/startFragments.json'),
+    outputFile = path.join(__dirname, '/queries.json');
 
-// Create queries for each of the query files
-var queries = queryFiles.map(function (queryFile) {
-  var query = fs.readFileSync(queryDir + queryFile, { encoding: 'utf8' }),
-      key = queryFile.replace(/\.\w+$/, '');
+// Create a query set for each subfolder
+var querySets = fs.readdirSync(queryDir).reduce(function (querySets, dir) {
+  return querySets[dir] = readQueries(path.join(queryDir, dir)), querySets;
+}, {});
 
-  // Try to extract the name for the query from a comment line
-  var lines = query.split('\n'), firstLine = lines.shift() || '';
-  if (firstLine[0] === '#') {
-    key = firstLine.replace(/#\s*/, '');
-    query = lines.join('\n');
-  }
+// Create queries for each of the query files in the folder
+function readQueries(directory) {
+  return fs.readdirSync(directory)
+  .filter(function (f) { return /\.sparql$/.test(f); })
+  .map(function (queryFile) {
+    var query = fs.readFileSync(path.join(directory, queryFile), { encoding: 'utf8' }),
+        key = queryFile.replace(/\.\w+$/, '');
 
-  return { name: key, sparql: query.trim() };
-});
-// Sort by name
-queries.sort(function (a, b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
+    // Try to extract the name for the query from a comment line
+    var lines = query.split('\n'), firstLine = lines.shift() || '';
+    if (firstLine[0] === '#') {
+      key = firstLine.replace(/#\s*/, '');
+      query = lines.join('\n');
+    }
 
-fs.writeFileSync(outputFile, JSON.stringify(queries));
+    return { name: key, sparql: query.trim() };
+  })
+  .sort(function (a, b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
+}
+
+// Read the start fragments
+var startFagments = JSON.parse(fs.readFileSync(startFragmentsFile, { encoding: 'utf8' }));
+
+// Write the start fragments and query sets to the output file
+fs.writeFileSync(outputFile, JSON.stringify({
+  startFragments: startFagments,
+  querySets: querySets,
+}));
