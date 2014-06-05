@@ -7,22 +7,28 @@ jQuery(function ($) {
       ldfUI = new LinkedDataFragmentsClientUI($('.ldf-client'), ldfConfig);
   ldfUI.activate();
 
+  // Track whether the query text has been edited
+  var $startFragments = $('.startFragments'),
+      $query = $('.query'), $queries = $('.queries'),
+      queryEdited = $query.val() !== '', state = {};
+  $query.change(function () { queryEdited = true; });
+
   // Load the start fragments and example queries
   $.getJSON('queries.json', function (settings) {
-    var $startFragments = $('.startFragments'),
-        $query = $('.query'), $queries = $('.queries'), loadedQuerySet;
-
-    // Track whether the query text has been edited
-    var queryEdited = $query.val() !== '';
-    $query.change(function () { queryEdited = true; });
+    // Add the possible start fragments to the select box
+    $startFragments.append(Object.keys(settings.startFragments).map(function (url) {
+      var fragment = settings.startFragments[url];
+      return $('<option>', { value: url, title: fragment.name, text: fragment.name });
+    }));
 
     // If an example query is picked, replace the query text
-    $queries.change(function () { $query.val($queries.val()); queryEdited = false; });
+    $queries.change(function () { $query.val($queries.val()).change(); queryEdited = false; });
 
     // If a start fragment is picked, select it and display its example queries
-    $startFragments.change(function () {
+    var loadedQuerySet;
+    function updateStartFragment() {
       // Set the start fragment in the client
-      var startFragment = settings.startFragments[parseInt($startFragments.val())];
+      var startFragment = settings.startFragments[$startFragments.val()];
       ldfUI.config.startFragment = startFragment.url;
 
       // Load the list of example queries if it is different from the currently loaded list
@@ -35,11 +41,35 @@ jQuery(function ($) {
         if (!queryEdited) $queries.change();
         else $queries.val('');
       }
-    });
-
-    // Add the possible start fragments to the select box
-    $startFragments.append(settings.startFragments.map(function (fragment, index) {
-      return $('<option>', { value: index, title: fragment.name, text: fragment.name });
-    })).change();
+    }
+    $startFragments.change(updateStartFragment);
+    // Load the initial start fragment
+    state.startFragment && $startFragments.val(state.startFragment);
+    updateStartFragment();
   });
+
+  // Loads the application state from the URL
+  function loadStateFromUrl() {
+    state = location.hash.substr(1).split('&').reduce(function (state, item) {
+      var keyvalue = item.match(/^([^=]+)=(.*)/);
+      if (keyvalue) state[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
+      return state;
+    }, {});
+    state.startFragment && $startFragments.val(state.startFragment).change();
+    state.query && $query.val(state.query).change() && $queries.val('');
+  }
+  loadStateFromUrl();
+  window.addEventListener('popstate', loadStateFromUrl);
+
+  // Saves the application state to the URL
+  function saveStateToUrl() {
+    var url = '#startFragment=' + encodeURIComponent($startFragments.val() || '') +
+              '&query=' + encodeURIComponent($query.val() || '');
+    // Special case: encode the initial state without a fragment
+    if ($query.val() === $queries.children(0).val() &&
+        $startFragments.val() === $startFragments.children(0).val())
+      url = location.href.replace(/#.*/, '');
+    history.replaceState && history.replaceState(null, null, url);
+  }
+  $query.add($startFragments).change(saveStateToUrl);
 });

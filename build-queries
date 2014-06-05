@@ -34,11 +34,14 @@ function readQueries(directory) {
   .sort(function (a, b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
 }
 
-// Read the start fragments
-var startFagments = JSON.parse(fs.readFileSync(startFragmentsFile, { encoding: 'utf8' }));
+// Read the start fragments and index them by URL
+var startFragments = JSON.parse(fs.readFileSync(startFragmentsFile, { encoding: 'utf8' }));
+startFragments = startFragments.reduce(function (startFragments, fragment) {
+  return startFragments[fragment.url] = fragment, startFragments;
+}, {});
 
 // Write the start fragments and query sets to the output file
 fs.writeFileSync(outputFile, JSON.stringify({
-  startFragments: startFagments,
+  startFragments: startFragments,
   querySets: querySets,
 }));
