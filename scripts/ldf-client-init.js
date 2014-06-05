@@ -63,12 +63,12 @@ jQuery(function ($) {
 
   // Saves the application state to the URL
   function saveStateToUrl() {
-    var url = '#startFragment=' + encodeURIComponent($startFragments.val() || '') +
-              '&query=' + encodeURIComponent($query.val() || '');
-    // Special case: encode the initial state without a fragment
-    if ($query.val() === $queries.children(0).val() &&
-        $startFragments.val() === $startFragments.children(0).val())
-      url = location.href.replace(/#.*/, '');
+    var url = location.href.replace(/#.*/, ''),
+        hasDefaultQuery = $query.val() === $queries.children(0).val(),
+        hasDefaultFragment = $startFragments.val() === $startFragments.children(0).val();
+    if (!hasDefaultFragment || !hasDefaultQuery)
+      url += '#startFragment=' + encodeURIComponent($startFragments.val() || '') +
+             (hasDefaultQuery ? '' : '&query=' + encodeURIComponent($query.val() || ''));
     history.replaceState && history.replaceState(null, null, url);
   }
   $query.add($startFragments).change(saveStateToUrl);
