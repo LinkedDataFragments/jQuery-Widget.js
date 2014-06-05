@@ -1,0 +1,6 @@
+# Possible juridical forms of Belgian enterprises
+SELECT * WHERE {
+    ?juridicalForm skos:inScheme <http://data.kbodata.be/conceptscheme/juridicalform#id>.
+    ?juridicalForm skos:prefLabel ?label.
+    FILTER LANGMATCHES(LANG(?label), "FR")
+}

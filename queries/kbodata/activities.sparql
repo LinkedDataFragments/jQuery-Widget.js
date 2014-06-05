@@ -1,0 +1,11 @@
+# Activities of corporations of public law
+SELECT DISTINCT ?activity WHERE {
+    ?organisation <http://www.w3.org/ns/regorg#orgType> [
+        skos:prefLabel "Société anonyme de droit public"@fr
+    ].
+    ?organisation <http://data.kbodata.be/def#orgMainActivity> [
+        skos:prefLabel ?activity
+    ].
+    FILTER LANGMATCHES(LANG(?activity), "FR")
+}
+LIMIT 100

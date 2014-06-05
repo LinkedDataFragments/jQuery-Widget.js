@@ -13,5 +13,10 @@
     "name": "DBpedia ?s ?p ?o basic LDF (cloud cached)",
     "url": "http://data-cdn.linkeddatafragments.org/dbpedia",
     "querySet": "dbpedia"
+  },
+  {
+    "name": "Belgian Crossroads Bank for Enterprises — KBOdata",
+    "url": "http://data.kbodata.be/fragments",
+    "querySet": "kbodata"
   }
 ]

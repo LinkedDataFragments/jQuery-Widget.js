@@ -1,0 +1,11 @@
+# Names of limited companies
+CONSTRUCT {
+    ?organisation skos:prefLabel ?label.
+}
+WHERE {
+    ?organisation <http://www.w3.org/ns/regorg#orgType> [
+        skos:prefLabel "Société anonyme"@fr
+    ].
+    ?organisation skos:prefLabel ?label.
+}
+LIMIT 100
