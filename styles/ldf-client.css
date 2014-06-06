@@ -24,6 +24,7 @@ a, button, button:hover, label {
   text-decoration: none;
 }
 a:hover {
+  color: #be1622;
   text-decoration: underline;
 }
 header a {
