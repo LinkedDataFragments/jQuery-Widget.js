@@ -48,11 +48,11 @@ label:after {
 }
 
 header h1 {
-  margin: .7em 0 0;
+  margin: .6em 0 0;
 }
 header p {
   font-weight: bold;
-  margin: 0 0 3em;
+  margin: 0 0 2em;
 }
 header .logo {
   float: right;
@@ -82,10 +82,11 @@ select {
 
 textarea {
   width: 100%;
-  min-height: 10em;
+  min-height: 11em;
   border: none;
   cursor: pointer;
   margin: 0 0 1em;
+  font-size: .95em;
 }
 textarea:hover {
   color: #be1622;
@@ -94,14 +95,15 @@ textarea:hover {
 pre {
   width: 100%;
   max-width: 650px;
-  height: 20em;
+  height: 25em;
   font-size: 9pt;
   overflow: scroll;
-  margin: 0 0 1em;
+  margin: .5em 0 1em;
 }
 
 .log {
   color: #666;
+  height: 6.5em;
 }
 
 footer {
