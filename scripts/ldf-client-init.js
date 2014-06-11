@@ -33,13 +33,18 @@ jQuery(function ($) {
 
       // Load the list of example queries if it is different from the currently loaded list
       if (loadedQuerySet !== startFragment.querySet) {
-        loadedQuerySet = startFragment.querySet;
-        $queries.empty().append((settings.querySets[loadedQuerySet] || []).map(function (query) {
+        var querySet = settings.querySets[loadedQuerySet = startFragment.querySet] || [];
+        $queries.empty().append((querySet).map(function (query) {
           return $('<option>', { value: query.sparql, title: query.sparql, text: query.name });
         }));
         // Load an example query if there are no pending edits to the query text
-        if (!queryEdited) $queries.change();
-        else $queries.val('');
+        if (!queryEdited)
+          $queries.change();
+        // Otherwise, try to match the entered query with an example
+        else {
+          queryEdited = !querySet.some(function (q) { return q.sparql === $query.val(); });
+          $queries.val(queryEdited ? '' : $query.val());
+        }
       }
     }
     $startFragments.change(updateStartFragment);
