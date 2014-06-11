@@ -1,0 +1,13 @@
+# Names and addresses of Telecom companies
+PREFIX locn: <http://www.w3.org/ns/locn#>
+SELECT ?name ?address WHERE {
+   ?organisation skos:prefLabel ?name.
+    ?organisation <http://data.kbodata.be/def#orgMainActivity> [
+        skos:prefLabel "Telecommunicatie"@nl
+    ].
+    ?organisation <http://www.w3.org/ns/org#hasSite> [
+        locn:address [ locn:fullAddress ?address ]
+    ].
+    FILTER LANGMATCHES(LANG(?name), "FR")
+}
+LIMIT 100

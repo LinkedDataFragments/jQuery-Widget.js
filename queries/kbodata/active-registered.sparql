@@ -1,0 +1,11 @@
+# Active registered organizations
+PREFIX rov: <http://www.w3.org/ns/regorg#>
+PREFIX oslo: <http://purl.org/oslo/ns/localgov#>
+
+CONSTRUCT { ?org skos:prefLabel ?label }
+WHERE {
+    ?org a rov:RegisteredOrganization;
+         oslo:companyStatus <http://data.kbodata.be/status/AC#id>;
+         skos:prefLabel ?label.
+}
+LIMIT 100
