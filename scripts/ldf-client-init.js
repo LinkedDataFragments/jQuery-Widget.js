@@ -48,6 +48,11 @@ jQuery(function ($) {
     updateStartFragment();
   });
 
+  // Scroll to the results when the button is clicked
+  var $execute = $('.execute').click(function () {
+    $('html,body').animate({ scrollTop: $execute.offset().top });
+  });
+
   // Loads the application state from the URL
   function loadStateFromUrl() {
     state = location.hash.substr(1).split('&').reduce(function (state, item) {
