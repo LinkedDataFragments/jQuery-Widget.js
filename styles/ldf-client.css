@@ -110,3 +110,23 @@ footer {
   font-size: .8em;
   margin-top: 2em;
 }
+
+@media (max-width: 725px) {
+  select {
+    float: none;
+    display: block;
+  }
+}
+
+@media (max-width: 500px) {
+  body {
+    padding: 1em;
+    font-size: 10pt;
+  }
+  h1 {
+    font-size: 1.5em;
+  }
+  .logo {
+    display: none;
+  }
+}
