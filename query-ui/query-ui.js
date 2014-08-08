@@ -2,10 +2,7 @@
 /** Initializes the LDF client and its fragment and query picker. */
 
 jQuery(function ($) {
-  var ldf = require('ldf-client'),
-      N3 = require('n3'),
-      logger = new ldf.Logger();
-
+  var logger = new ldf.Logger();
   var $query = $('.query'), $start = $('.execute'),
       $startFragments = $('.startFragments'), $queries = $('.queries'),
       $results = $('.results'), $log = $('.log');
