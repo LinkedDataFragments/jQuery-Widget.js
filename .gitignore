@@ -1,4 +1,4 @@
 node_modules
 *.log
-queries.json
-build
+*/build
+query-ui/queries.json

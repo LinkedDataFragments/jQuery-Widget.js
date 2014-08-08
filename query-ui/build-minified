@@ -16,12 +16,12 @@ var scripts = [], minifiedScript;
 html = html.replace(/\s*<script src="([^"]+)"><\/script>\s*/g, function (match, script) {
   return scripts.push(__dirname + '/' + script), '';
 });
-html = html.replace('</body>', '<script src="scripts/ldf-client.js"></script></body>');
+html = html.replace('</body>', '<script src="scripts/ldf-query-ui.js"></script></body>');
 minifiedScript = UglifyJS.minify(scripts, { output: { comments: /^!/ } });
-fs.writeFileSync(scriptsDir + 'ldf-client.js', minifiedScript.code);
+fs.writeFileSync(scriptsDir + 'ldf-query-ui.js', minifiedScript.code);
 
 // Inline the styles
-var style = UglifyCSS.processFiles([sourceDir + '/styles/ldf-client.css'])
+var style = UglifyCSS.processFiles([sourceDir + 'ldf-client.css'])
 html = html.replace(/<link[^>]*ldf-client[^>]*>/, '\n<style>' + style + '</style>');
 
 // Copy auxiliary files
