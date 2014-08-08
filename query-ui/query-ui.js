@@ -3,7 +3,7 @@
 
 jQuery(function ($) {
   var logger = new ldf.Logger();
-  var $query = $('.query'), $start = $('.execute'),
+  var $query = $('.query').focus(), $start = $('.execute'),
       $startFragments = $('.startFragments'), $queries = $('.queries'),
       $results = $('.results'), $log = $('.log');
 
