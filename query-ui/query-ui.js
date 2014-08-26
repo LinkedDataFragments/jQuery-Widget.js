@@ -31,7 +31,7 @@ jQuery(function ($) {
     sparqlIterator.on('error', function (error) { $results.text(error.message); throw error; });
 
     // Read the iterator's results, and write them depending on the query type
-    switch (sparqlIterator.parsedQuery.type) {
+    switch (sparqlIterator.queryType) {
       // For SELECT queries, write a JSON array representation of the rows
       case 'SELECT':
         var resultsCount = 0;
@@ -53,7 +53,7 @@ jQuery(function ($) {
       break;
       // Other queries are not supported at the moment
       default:
-        throw new Error('Unsupported query type: ' + sparqlIterator.parsedQuery.type);
+        throw new Error('Unsupported query type: ' + sparqlIterator.queryType);
     }
   });
 
