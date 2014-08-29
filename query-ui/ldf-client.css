@@ -112,20 +112,25 @@ footer {
 }
 
 @media (max-width: 725px) {
-  select {
-    float: none;
-    display: block;
-  }
-}
-
-@media (max-width: 500px) {
   body {
     padding: 1em;
     font-size: 10pt;
   }
   h1 {
-    font-size: 1.5em;
+    font-size: 1.4em;
   }
+  .logo {
+    margin: -1em -.5em 0 0;
+  }
+  select {
+    float: none;
+    display: block;
+    min-width: 0;
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 500px) {
   .logo {
     display: none;
   }
