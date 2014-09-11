@@ -1,4 +1,4 @@
-# Directors of movies starring Brad Pitt
+# 1. Directors of movies starring Brad Pitt
 SELECT ?title ?name
 WHERE {
   ?movie dbpprop:starring dbpedia:Brad_Pitt;

@@ -20,18 +20,26 @@ function readQueries(directory) {
   .filter(function (f) { return /\.sparql$/.test(f); })
   .map(function (queryFile) {
     var query = fs.readFileSync(path.join(directory, queryFile), { encoding: 'utf8' }),
-        key = queryFile.replace(/\.\w+$/, '');
+        name = queryFile.replace(/\.\w+$/, ''), priority = 1000;
 
     // Try to extract the name for the query from a comment line
     var lines = query.split('\n'), firstLine = lines.shift() || '';
     if (firstLine[0] === '#') {
-      key = firstLine.replace(/#\s*/, '');
+      // Remote the name from the query
       query = lines.join('\n');
+      name = firstLine.replace(/#\s*/, '');
+      // If the name begins with a number, this number indicates the priority
+      if (/^\d/.test(name)) {
+        priority = parseInt(name, 10);
+        name = name.replace(/^\d\W?\s*/, '');
+      }
     }
 
-    return { name: key, sparql: query.trim() };
+    return { name: name, priority: priority, sparql: query.trim() };
   })
-  .sort(function (a, b) { return a.name.toLowerCase() > b.name.toLowerCase(); });
+  .sort(function (a, b) {
+    return (a.priority - b.priority) || (a.name.toLowerCase() > b.name.toLowerCase());
+  });
 }
 
 // Read the start fragments and index them by URL
