@@ -1,0 +1,8 @@
+# 2. Foreign titles of Natalie Portman movies
+SELECT ?titleEng ?title
+WHERE {
+    ?movie dbpprop:starring [ rdfs:label "Natalie Portman"@en ];
+           rdfs:label ?titleEng, ?title.
+    FILTER LANGMATCHES(LANG(?titleEng), "EN")
+    FILTER (!LANGMATCHES(LANG(?title), "EN"))
+}
