@@ -1,17 +1,22 @@
 [
   {
-    "name": "DBpedia ?s ?p ?o basic LDF (through HDT)",
+    "name": "DBpedia 3.8",
     "url": "http://data.linkeddatafragments.org/dbpedia",
     "querySet": "dbpedia"
   },
   {
-    "name": "DBpedia ?s ?p ?o basic LDF (through Virtuoso)",
-    "url": "http://data.linkeddatafragments.org/dbpedia-virtuoso",
+    "name": "DBpedia 2014",
+    "url": "http://data.linkeddatafragments.org/dbpedia2014",
     "querySet": "dbpedia"
   },
   {
-    "name": "DBpedia ?s ?p ?o basic LDF (cloud cached)",
+    "name": "DBpedia 3.8 (cloud cached)",
     "url": "http://data-cdn.linkeddatafragments.org/dbpedia",
+    "querySet": "dbpedia"
+  },
+  {
+    "name": "DBpedia 2014 (cloud cached)",
+    "url": "http://data-cdn.linkeddatafragments.org/dbpedia2014",
     "querySet": "dbpedia"
   },
   {
