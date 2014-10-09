@@ -3,9 +3,10 @@
 
 jQuery(function ($) {
   var logger = new ldf.Logger();
-  var $query = $('.query').focus(), $start = $('.execute'),
+  var $query = $('.query').focus(), $start = $('.execute'), $stop = $('.stop'),
       $startFragments = $('.startFragments'), $queries = $('.queries'),
       $results = $('.results'), $log = $('.log');
+  var sparqlIterator;
 
 
 
@@ -18,7 +19,8 @@ jQuery(function ($) {
     // Clear results and log, and scroll page to the results
     $log.empty();
     $results.empty();
-    $start.prop('disabled', true);
+    $start.hide();
+    $stop.show();
     $('html,body').animate({ scrollTop: $start.offset().top });
 
     // Create a client to fetch the fragments through HTTP
@@ -26,9 +28,10 @@ jQuery(function ($) {
     config.fragmentsClient = new ldf.FragmentsClient($startFragments.val(), config);
 
     // Create the iterator to solve the query
-    var sparqlIterator = new ldf.SparqlIterator($query.val(), config);
-    sparqlIterator.on('end', function () { $start.prop('disabled', false); });
-    sparqlIterator.on('error', function (error) { $results.text(error.message); throw error; });
+    try { sparqlIterator = new ldf.SparqlIterator($query.val(), config); }
+    catch (error) { return stopExecution(error); }
+    sparqlIterator.on('end', stopExecution);
+    sparqlIterator.on('error', stopExecution);
 
     // Read the iterator's results, and write them depending on the query type
     switch (sparqlIterator.queryType) {
@@ -56,6 +59,15 @@ jQuery(function ($) {
         throw new Error('Unsupported query type: ' + sparqlIterator.queryType);
     }
   });
+
+  // Stops the query execution, possibly with an error
+  function stopExecution(error) {
+    sparqlIterator && sparqlIterator.removeAllListeners();
+    error && error.message && $results.text(error.message);
+    $stop.hide();
+    $start.show();
+  };
+  $stop.click(stopExecution);
 
   // Add log lines to the log element
   logger._print = function (items) { appendText($log, items.join(' ').trim() + '\n'); };
