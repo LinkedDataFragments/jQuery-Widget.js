@@ -17,11 +17,11 @@ jQuery(function ($) {
   // Execute the query when the button is clicked
   $start.click(function () {
     // Clear results and log, and scroll page to the results
+    $('html,body').animate({ scrollTop: $start.offset().top });
     $log.empty();
     $results.empty();
     $start.hide();
     $stop.show();
-    $('html,body').animate({ scrollTop: $start.offset().top });
 
     // Create a client to fetch the fragments through HTTP
     var config = { prefixes: prefixes, logger: logger };
