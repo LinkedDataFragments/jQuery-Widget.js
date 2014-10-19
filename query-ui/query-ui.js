@@ -37,13 +37,10 @@ jQuery(function ($) {
     switch (sparqlIterator.queryType) {
       // For SELECT queries, write a JSON array representation of the rows
       case 'SELECT':
-        var resultsCount = 0;
-        appendText($results, '[');
         sparqlIterator.on('data', function (row) {
-          appendText($results, resultsCount++ ? ',\n' : '\n', row);
-        });
-        sparqlIterator.on('end', function () {
-          appendText($results, resultsCount ? '\n]' : ']');
+          appendText($results, $.map(row, function (value, variable) {
+            return variable + ': ' + value;
+          }).join('\n'), '\n\n');
         });
       break;
       // For CONSTRUCT queries, write a Turtle representation of all results
@@ -74,12 +71,8 @@ jQuery(function ($) {
 
   // Appends text to the given element
   function appendText($element) {
-    for (var i = 1, l = arguments.length; i < l; i++) {
-      var item = arguments[i];
-      if (typeof item !== 'string')
-        item = JSON.stringify(item, null, '  ');
-      $element.append(document.createTextNode(item));
-    }
+    for (var i = 1, l = arguments.length; i < l; i++)
+      $element.append(document.createTextNode(arguments[i]));
     $element.scrollTop(1E10);
   }
 
