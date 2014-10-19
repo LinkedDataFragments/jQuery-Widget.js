@@ -72,7 +72,12 @@ jQuery(function ($) {
   // Appends text to the given element
   function appendText($element) {
     for (var i = 1, l = arguments.length; i < l; i++)
-      $element.append(document.createTextNode(arguments[i]));
+      $element.append((arguments[i] + '').replace(/(<)|(>)|(&)|(https?:\/\/[^\s<>]+)/g,
+        function (match, lt, gt, amp, url) {
+          // Escape special HTML characters and convert URLs into links
+          return lt && '&lt;' || gt && '&gt;' || amp && '&amp;' ||
+                 $('<a>', { href: url, target: '_blank', text: url })[0].outerHTML;
+        }));
     $element.scrollTop(1E10);
   }
 

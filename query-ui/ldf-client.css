@@ -97,6 +97,9 @@ pre {
   overflow: scroll;
   margin: .5em 0 1em;
 }
+pre a {
+  font-weight: normal;
+}
 
 .log {
   color: #666;
