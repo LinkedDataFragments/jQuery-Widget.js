@@ -1,1 +1,9 @@
-../dbpedia3.8/brad-pitt.sparql
+# 1. Directors of movies starring Brad Pitt
+SELECT ?title ?name
+WHERE {
+  ?movie dbpprop:starring [ rdfs:label "Brad Pitt"@en ];
+         rdfs:label ?title;
+         dbpedia-owl:director [ rdfs:label ?name ].
+  FILTER LANGMATCHES(LANG(?title), "EN")
+  FILTER LANGMATCHES(LANG(?name),  "EN")
+}
