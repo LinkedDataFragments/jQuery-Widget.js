@@ -1,5 +1,5 @@
 # 1. Directors of movies starring Brad Pitt
-SELECT ?title ?name
+SELECT ?movie ?title ?name
 WHERE {
   ?movie dbpprop:starring [ rdfs:label "Brad Pitt"@en ];
          rdfs:label ?title;
