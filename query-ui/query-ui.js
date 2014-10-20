@@ -37,10 +37,15 @@ jQuery(function ($) {
     switch (sparqlIterator.queryType) {
       // For SELECT queries, write a JSON array representation of the rows
       case 'SELECT':
+        var resultCount = 0;
         sparqlIterator.on('data', function (row) {
+          resultCount++;
           appendText($results, $.map(row, function (value, variable) {
             return variable + ': ' + value;
           }).join('\n'), '\n\n');
+        });
+        sparqlIterator.on('end', function () {
+          resultCount || appendText($results, '(This query has no results.)');
         });
       break;
       // For CONSTRUCT queries, write a Turtle representation of all results
