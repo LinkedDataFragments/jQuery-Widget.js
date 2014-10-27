@@ -1,0 +1,5 @@
+# Airports in Italy
+SELECT DISTINCT ?entity WHERE {
+  ?entity a dbpedia-owl:Airport;
+          dbpprop:cityServed dbpedia:Italy.
+}

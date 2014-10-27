@@ -1,0 +1,7 @@
+# Authors of books
+SELECT DISTINCT ?book ?author
+WHERE {
+  ?book rdf:type dbpedia-owl:Book;
+        dbpedia-owl:author ?author.
+}
+LIMIT 100

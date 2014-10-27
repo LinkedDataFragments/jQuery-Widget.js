@@ -1,0 +1,6 @@
+# Places that have something to do with Barack Obama
+SELECT ?place ?relation
+WHERE {
+  ?place rdf:type dbpedia-owl:Settlement;
+         ?relation dbpedia:Barack_Obama;
+}

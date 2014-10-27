@@ -31,14 +31,14 @@ function readQueries(directory) {
       // If the name begins with a number, this number indicates the priority
       if (/^\d/.test(name)) {
         priority = parseInt(name, 10);
-        name = name.replace(/^\d\W?\s*/, '');
+        name = name.replace(/^\d+\W\s*/, '');
       }
     }
 
     return { name: name, priority: priority, sparql: query.trim() };
   })
   .sort(function (a, b) {
-    return (a.priority - b.priority) || (a.name.toLowerCase() > b.name.toLowerCase());
+    return (a.priority - b.priority) || (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
   });
 }
 

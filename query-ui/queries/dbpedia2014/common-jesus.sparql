@@ -1,0 +1,8 @@
+# People who have something in common with Jesus
+SELECT DISTINCT ?person
+WHERE {
+  dbpedia:Jesus dc:subject ?common.
+  ?person a foaf:Person;
+          dc:subject ?common.
+}
+LIMIT 1000

@@ -1,0 +1,6 @@
+# Carpenters killed by crucifixion
+PREFIX yago: <http://dbpedia.org/class/yago/>
+SELECT ?person
+WHERE {
+  ?person a yago:Carpenters, yago:PeopleExecutedByCrucifixion.
+}

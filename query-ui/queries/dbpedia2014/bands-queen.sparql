@@ -1,0 +1,7 @@
+# Bands associated with members of Queen
+SELECT DISTINCT ?artist ?band WHERE {
+  { <http://dbpedia.org/resource/Queen_(band)> dbpedia-owl:bandMember ?artist. }
+  UNION
+  { <http://dbpedia.org/resource/Queen_(band)> dbpedia-owl:formerBandMember ?artist. }
+  ?artist dbpedia-owl:associatedBand ?band.
+}

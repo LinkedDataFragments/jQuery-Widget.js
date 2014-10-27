@@ -1,0 +1,8 @@
+# Events that took place in the Trentino region
+SELECT DISTINCT ?entity ?event
+WHERE {
+  ?entity a dbpedia-owl:Event;
+          rdfs:label ?event;
+          ?predicate <http://dbpedia.org/resource/Trentino> .
+  FILTER(langMatches(lang(?event), "EN"))
+}

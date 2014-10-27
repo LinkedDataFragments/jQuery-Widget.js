@@ -1,0 +1,5 @@
+# Award ceremonies in Dutch speaking countries
+SELECT ?award WHERE {
+  ?award a dbpedia-owl:Award;
+         dbpprop:country [ dbpedia-owl:language dbpedia:Dutch_language ].
+}

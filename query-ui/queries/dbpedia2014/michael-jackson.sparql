@@ -1,0 +1,9 @@
+# Bands Michael Jackson wrote a song for
+SELECT DISTINCT ?performer ?name WHERE {
+  ?work dbpedia-owl:writer dbpedia:Michael_Jackson;
+        dbpedia-owl:musicalArtist ?performer.
+  OPTIONAL {
+    ?performer rdfs:label ?name.
+    FILTER LANGMATCHES(LANG(?name), "EN")
+  }
+}

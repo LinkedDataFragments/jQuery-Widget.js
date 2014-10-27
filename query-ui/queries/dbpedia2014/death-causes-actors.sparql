@@ -1,0 +1,7 @@
+# Death causes of male American actors
+PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
+SELECT ?actor ?cause
+WHERE {
+  ?actor dbpedia-owl:deathCause ?cause.
+  ?actor dc:subject <http://dbpedia.org/resource/Category:American_male_film_actors>
+}

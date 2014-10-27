@@ -7,4 +7,7 @@ SELECT ?clubName ?playerName WHERE {
           dbpedia-owl:birthPlace ?city;
           rdfs:label ?playerName.
   ?city dbpedia-owl:country dbpedia:Spain.
+
+  FILTER LANGMATCHES(LANG(?clubName), "EN")
+  FILTER LANGMATCHES(LANG(?playerName), "EN")
 }

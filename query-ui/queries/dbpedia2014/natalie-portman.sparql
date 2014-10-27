@@ -1,4 +1,4 @@
-# 2. Foreign titles of Natalie Portman movies
+# Foreign titles of Natalie Portman movies
 SELECT ?titleEng ?title
 WHERE {
     ?movie dbpprop:starring [ rdfs:label "Natalie Portman"@en ];

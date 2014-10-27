@@ -1,0 +1,7 @@
+# Desserts made with plants
+SELECT ?dessert ?fruit
+WHERE {
+  ?dessert dbpedia-owl:type <http://dbpedia.org/resource/Dessert>;
+           dbpedia-owl:ingredient ?fruit.
+  ?fruit dbpedia-owl:kingdom <http://dbpedia.org/resource/Plant>.
+}
