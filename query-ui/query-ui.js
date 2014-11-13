@@ -8,7 +8,7 @@ jQuery(function ($) {
       $results = $('.results'), $log = $('.log');
   var sparqlIterator;
 
-
+  ldf.Logger.setLevel('info');
 
 /* * * * *
              QUERY EXECUTION AND RESULT DISPLAY
@@ -72,7 +72,7 @@ jQuery(function ($) {
   $stop.click(stopExecution);
 
   // Add log lines to the log element
-  logger._print = function (items) { appendText($log, items.join(' ').trim() + '\n'); };
+  logger._print = function (items) { appendText($log, items.slice(2).join(' ').trim() + '\n'); };
 
   // Appends text to the given element
   function appendText($element) {
