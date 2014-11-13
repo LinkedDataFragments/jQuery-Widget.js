@@ -1,10 +1,10 @@
 {
   "scripts": {
-    "postinstall": "./node_modules/browserify/bin/cmd.js browser -u stream -o deps/ldf-client-browser.js"
+    "postinstall": "browserify browser -u stream -o deps/ldf-client-browser.js"
   },
   "dependencies": {
-    "ldf-client": ">=1.1.1",
-    "browserify": ">=5.9.0"
+    "ldf-client": "~1.2.0",
+    "browserify": "~6.3.0"
   },
   "devDependencies": {
     "uglify-js": ">=2.4.12",
