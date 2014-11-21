@@ -18,7 +18,7 @@ You can use the resulting `ldf-client-browser.js` in your browser applications.
 
 ## Examples in this repository
 - **query-ui:** a user interface to execute SPARQL queries ([demo](http://client.linkeddatafragments.org/))
-- **query-pull-based:** an example of query results arriving on demand
+- **query-pull-based:** retrieve results on-demand, instead of streaming them all
 
 ## Compiling the browser client
 ```bash
