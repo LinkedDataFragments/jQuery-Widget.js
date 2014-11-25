@@ -23,5 +23,10 @@
     "name": "Belgian Crossroads Bank for Enterprises — KBOdata",
     "url": "http://data.kbodata.be/fragments",
     "querySet": "kbodata"
+  },
+  {
+    "name": "Ghent University Academic Bibliography",
+    "url": "http://data.linkeddatafragments.org/ugent-biblio",
+    "querySet": "ugent-biblio"
   }
 ]

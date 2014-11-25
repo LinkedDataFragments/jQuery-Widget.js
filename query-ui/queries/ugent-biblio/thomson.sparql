@@ -1,0 +1,6 @@
+# Publications by Thomson and Thompson
+SELECT ?jansen ?janssen ?title {
+  ?publication dc:creator [ foaf:givenname ?jansen;  foaf:surname "Jansen" ];
+               dc:creator [ foaf:givenname ?janssen; foaf:surname "Janssen" ];
+               dc:title ?title.
+}

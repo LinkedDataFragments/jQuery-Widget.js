@@ -1,0 +1,7 @@
+# 1. Publications by Anne De Paepe
+SELECT ?title ?classification WHERE {
+  ?author foaf:name "Anne De Paepe".
+  ?publication dc:creator ?author;
+               dc:title ?title;
+               <http://lib.ugent.be/classification/classification> ?classification.
+}
