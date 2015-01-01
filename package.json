@@ -3,7 +3,7 @@
     "postinstall": "browserify browser -u stream -o deps/ldf-client-browser.js\ncd query-ui\n./build-all"
   },
   "dependencies": {
-    "ldf-client": "~1.2.0",
+    "ldf-client": "~1.2.1",
     "browserify": "~6.3.0"
   },
   "devDependencies": {

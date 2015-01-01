@@ -52,7 +52,7 @@ jQuery(function ($) {
       case 'CONSTRUCT':
         var writer = new N3.Writer({ write: function (chunk, encoding, done) {
           appendText($results, chunk), done && done();
-        }}, config.prefixes);
+        }}, config);
         sparqlIterator.on('data', function (triple) { writer.addTriple(triple); })
                       .on('end',  function () { writer.end(); });
       break;
