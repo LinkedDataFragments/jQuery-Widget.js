@@ -16,6 +16,7 @@ var querySets = fs.readdirSync(queryDir).reduce(function (querySets, dir) {
 
 // Create queries for each of the query files in the folder
 function readQueries(directory) {
+  var priorities = {};
   return fs.readdirSync(directory)
   .filter(function (f) { return /\.sparql$/.test(f); })
   .map(function (queryFile) {
@@ -34,19 +35,18 @@ function readQueries(directory) {
         name = name.replace(/^\d+\W\s*/, '');
       }
     }
+    priorities[name] = priority;
 
-    return { name: name, priority: priority, sparql: query.trim() };
+    return { name: name, sparql: query.trim() };
   })
   .sort(function (a, b) {
-    return (a.priority - b.priority) || (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+    return (priorities[a.name] - priorities[b.name]) ||
+           (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
   });
 }
 
-// Read the start fragments and index them by URL
+// Read the start fragments
 var startFragments = JSON.parse(fs.readFileSync(startFragmentsFile, { encoding: 'utf8' }));
-startFragments = startFragments.reduce(function (startFragments, fragment) {
-  return startFragments[fragment.url] = fragment, startFragments;
-}, {});
 
 // Write the start fragments and query sets to the output file
 fs.writeFileSync(outputFile, JSON.stringify({

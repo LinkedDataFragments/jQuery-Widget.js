@@ -1,8 +1,10 @@
 /* ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
 
-html, textarea, button {
+html, input, textarea, button {
   font: 11pt/1.4 'Open Sans', Verdana, Arial, sans-serif;
-  outline: none;
+}
+* {
+  outline: none !important;
 }
 
 html {
@@ -17,10 +19,12 @@ body {
   box-shadow: 2px 2px 15px 0px rgba(50, 50, 50, 0.75);
 }
 
-a, button, button:hover, label {
+a, button, label {
+  font-weight: bold;
+}
+a, button, button:hover, input:hover, label {
   color: #be1622;
   cursor: pointer;
-  font-weight: bold;
   text-decoration: none;
 }
 a:hover {
@@ -39,6 +43,10 @@ button {
   margin-left: -1px;
   border: 1px solid #999999;
   cursor: pointer;
+}
+input {
+  padding: 1px 5px;
+  font-size: .9em;
 }
 label:after {
   content: ":";
@@ -72,9 +80,9 @@ li {
   margin: .5em 0;
 }
 
-select {
-  min-width: 390px;
+.ui-combobox {
   float: right;
+  min-width: 390px;
 }
 
 textarea {
@@ -134,4 +142,117 @@ footer {
   .logo {
     display: none;
   }
+}
+
+
+
+/* Styling below derived from
+ * jQuery UI - v1.11.2 - 2015-01-12
+ * http://jqueryui.com
+ * Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
+
+/* UI states */
+.ui-helper-hidden-accessible { display: none; }
+.ui-state-default, .ui-widget-content {
+	border: 1px solid #999999;
+	background: #f6f6f6;
+}
+.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover,
+.ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
+  color: #be1622;
+	border: 1px solid;
+}
+
+/* Corner radius */
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+	border-top-left-radius: 4px;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+	border-top-right-radius: 4px;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+	border-bottom-left-radius: 4px;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+	border-bottom-right-radius: 4px;
+}
+
+/* autocomplete */
+.ui-autocomplete {
+	position: absolute;
+	top: 0;
+	left: 0;
+	cursor: default;
+}
+
+/* button */
+.ui-button {
+  color: black;
+	display: inline-block;
+	position: relative;
+	line-height: normal;
+	cursor: pointer;
+	text-align: center;
+	overflow: visible; /* removes extra width in IE */
+}
+.ui-button, .ui-button:link, .ui-button:visited, .ui-button:hover, .ui-button:active {
+	text-decoration: none;
+}
+.ui-button:active {
+  padding: 1px 0 0 0px;
+}
+
+/* menu */
+.ui-menu {
+	list-style: none;
+	margin: 0;
+	display: block;
+	outline: none;
+  max-height: 400px;
+  overflow-x: scroll;
+}
+.ui-menu-item {
+	position: relative;
+  margin: 0;
+	padding: 3px 0 3px 0;
+	cursor: pointer;
+	min-height: 0; /* support: IE7 */
+	/* support: IE10, see #8844 */
+	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+}
+.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
+	margin: -1px;
+}
+
+/* combobox */
+.ui-combobox {
+  position: relative;
+  display: inline-block;
+  padding-right: 25px;
+}
+.ui-combobox input {
+  width: 100%;
+}
+.ui-combobox .ui-button {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 20px;
+}
+.ui-autocomplete .ui-menu-item {
+  width: 100%;
+}
+.ui-autocomplete .value {
+  font-weight: bold;
+}
+.ui-autocomplete .label {
+  font-size: .9em;
+}
+.ui-autocomplete .value, .ui-autocomplete .label {
+  padding: 0 7px;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

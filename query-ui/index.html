@@ -5,9 +5,19 @@
   <meta charset="utf-8">
   <title>Linked Data Fragments client</title>
   <script src="../deps/jquery-2.1.0.js"></script>
+  <script src="../deps/jquery-ui-1.11.2-custom.js"></script>
   <script src="../deps/ldf-client-browser.js"></script>
   <script src="../deps/prefixes.js"></script>
+  <script src="combobox.js"></script>
   <script src="query-ui.js"></script>
+  <script src="query-state.js"></script>
+  <script>
+    $(function () {
+      $('.ldf-client').queryui({
+        queryCollection: 'queries.json',
+      });
+    });
+  </script>
   <link rel=stylesheet href="ldf-client.css">
   <link rel=stylesheet href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,700italic,400,700">
   <meta name="viewport" content="width=device-width">
@@ -17,7 +27,7 @@
     <a class="logo" href="http://linkeddatafragments.org/">
       <img src="http://linkeddatafragments.org/images/logo.svg" alt="" />
     </a>
-    <h1><a href="/">Linked Data Fragments client</a></h1>
+    <h1><a href="#">Linked Data Fragments client</a></h1>
     <p class="abstract">
       Enter or choose a SPARQL query below
       and see then how your browser solves it using only
@@ -30,21 +40,21 @@
       <ul>
         <li>
           <label>Choose a data source</label>
-          <select class="startFragments"></select>
+          <input class="startFragment" />
         </li>
 
         <li>
           <label>Type a SPARQL query</label>
-          <textarea class="query"></textarea>
+          <textarea class="queryText"></textarea>
         </li>
 
         <li>
           <label>…or pick an example query</label>
-          <select class="queries"></select>
+          <textarea class="query"></textarea>
         </li>
 
         <li>
-          <button class="execute">Execute query</button>
+          <button class="start">Execute query</button>
           <button class="stop" style="display:none">Stop execution</button>
         </li>
 
@@ -68,7 +78,7 @@
 
   <footer>
     <p>
-      ©2013–2014
+      ©2013–2015
       <a href="http://multimedialab.elis.ugent.be/" target="_blank">Multimedia Lab</a>,
       <a href="http://www.ugent.be/" target="_blank">Ghent University</a> –
       <a href="http://www.iminds.be/" target="_blank">iMinds</a>, Belgium.

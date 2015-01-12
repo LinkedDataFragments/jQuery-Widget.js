@@ -3,41 +3,47 @@
 /* Builds the minified HTML and JavaScript. */
 
 var fs = require('fs'),
+    path = require('path'),
     UglifyJS = require("uglify-js"),
     UglifyCSS = require('uglifycss');;
 
-var sourceDir = __dirname + '/',
-    outputDir = ensureExists(sourceDir + 'build/'),
-    scriptsDir = ensureExists(outputDir + 'scripts/'),
-    html = fs.readFileSync(__dirname + '/index.html', 'utf8');
+var sourceDir =__dirname,
+    outputDir = ensureExists(path.join(sourceDir, 'build')),
+    scriptsDir = ensureExists(path.join(outputDir, 'scripts')),
+    html = fs.readFileSync(path.join(sourceDir, 'index.html'), 'utf8');
 
-// Bundle all scripts into a single script
-var scripts = [], minifiedScript;
+// Bundle all script files into a single script
+var scriptFiles = [], inlineScript = '', minifiedScript;
 html = html.replace(/\s*<script src="([^"]+)"><\/script>\s*/g, function (match, script) {
-  return scripts.push(__dirname + '/' + script), '';
+  return scriptFiles.push(path.join(sourceDir, script)), '';
 });
-html = html.replace('</body>', '<script src="scripts/ldf-query-ui.js"></script></body>');
-minifiedScript = UglifyJS.minify(scripts, { output: { comments: /^!/ } });
-fs.writeFileSync(scriptsDir + 'ldf-query-ui.js', minifiedScript.code);
+if (scriptFiles.length) {
+  minifiedScript = UglifyJS.minify(scriptFiles, { output: { comments: /^!/ } });
+  fs.writeFileSync(path.join(scriptsDir, 'ldf-query-ui.js'), minifiedScript.code);
+  html = html.replace('</body>', '<script src="scripts/ldf-query-ui.js"></script>\n</body>');
+}
+
+// Bundle all inline scripts into a single script
+html = html.replace(/\s*<script>([^]*?)<\/script>\s*/g, function (match, script) {
+  return inlineScript += script + '\n', '';
+});
+if (inlineScript) {
+  inlineScript = UglifyJS.minify(inlineScript, { fromString: true }).code;
+  html = html.replace('</body>', '<script>' + inlineScript + '</script>\n</body>');
+}
 
 // Inline the styles
-var style = UglifyCSS.processFiles([sourceDir + 'ldf-client.css'])
+var style = UglifyCSS.processFiles([path.join(sourceDir, 'ldf-client.css')])
 html = html.replace(/<link[^>]*ldf-client[^>]*>/, '\n<style>' + style + '</style>');
 
 // Copy auxiliary files
-copy(sourceDir + 'queries.json', outputDir + 'queries.json');
+copy(path.join(sourceDir, 'queries.json'), path.join(outputDir, 'queries.json'));
 
 // Write the output HTML
-fs.writeFileSync(outputDir + 'index.html', html);
+fs.writeFileSync(path.join(outputDir, 'index.html'), html);
 
-// Ensure the path exists
-function ensureExists(path) {
-  if (!fs.existsSync(path))
-    fs.mkdirSync(path);
-  return path;
-}
+// Ensures the path exists
+function ensureExists(path) { return fs.existsSync(path) || fs.mkdirSync(path), path; }
 
 // Copies the source file to the destination
-function copy(source, destination) {
-  fs.writeFileSync(destination, fs.readFileSync(source));
-}
+function copy(source, destination) { fs.writeFileSync(destination, fs.readFileSync(source)); }

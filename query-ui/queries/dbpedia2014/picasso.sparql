@@ -1,5 +1,9 @@
 # Artists influenced by Picasso
-SELECT ?artist ?date WHERE {
+CONSTRUCT {
+  ?artist a dbpedia-owl:Artist.
+  ?artist dbpedia-owl:birthDate ?date.
+}
+WHERE {
   ?artist dbpedia-owl:influencedBy dbpedia:Pablo_Picasso.
   ?artist a dbpedia-owl:Artist.
   ?artist dbpedia-owl:birthDate ?date.
