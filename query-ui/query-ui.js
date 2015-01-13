@@ -89,6 +89,7 @@
           if (startFragment.url === startFragmentUrl && startFragment.querySet in querySets)
             return querySet = startFragment.querySet;
         }, this);
+        querySet = querySet || 'default';
         // Load the query set if not already loaded
         if (querySet !== this._querySet) {
           this._querySet = querySet;

@@ -1,0 +1,8 @@
+# 2. Explore object types
+SELECT DISTINCT ?type ?label WHERE {
+  ?s a ?type.
+  OPTIONAL {
+    ?type rdfs:label ?label.
+  }
+ FILTER LANGMATCHES(LANG(?label), "EN")
+}

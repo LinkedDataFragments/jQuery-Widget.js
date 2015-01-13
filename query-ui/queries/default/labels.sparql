@@ -1,0 +1,10 @@
+# 3. Extract things and their labels
+SELECT DISTINCT ?subject ?label WHERE {
+  ?subject ?p ?o.
+  {
+    { ?subject dc:title ?label }
+    UNION
+    { ?subject rdfs:label ?label }
+  }
+}
+LIMIT 100

@@ -1,0 +1,5 @@
+# 1. Show 100 triples
+CONSTRUCT WHERE {
+  ?s ?p ?o.
+}
+LIMIT 100
