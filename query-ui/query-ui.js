@@ -127,8 +127,9 @@
           var resultCount = 0;
           resultsIterator.on('data', function (row) {
             resultCount++;
-            appendText($results, $.map(row, function (k, v) { return v + ': ' + k; })
-                                  .join('\n'), '\n\n');
+            var lines = [];
+            $.each(row, function (k, v) { if (v !== undefined) lines.push(k + ': ' + v); });
+            appendText($results, lines.join('\n'), '\n\n');
           });
           resultsIterator.on('end', function () {
             resultCount || appendText($results, '(This query has no results.)');
