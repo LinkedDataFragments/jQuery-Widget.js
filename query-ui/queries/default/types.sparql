@@ -6,3 +6,4 @@ SELECT DISTINCT ?type ?label WHERE {
   }
  FILTER LANGMATCHES(LANG(?label), "EN")
 }
+LIMIT 100
