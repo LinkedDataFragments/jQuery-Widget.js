@@ -1,14 +1,15 @@
 /* ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
 
+html {
+  font-size: 11pt;
+  background: #f6f6f6;
+}
 html, input, textarea, button {
-  font: 11pt/1.4 'Open Sans', Verdana, Arial, sans-serif;
+  font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
+  -webkit-text-size-adjust: none;
 }
 * {
   outline: none !important;
-}
-
-html {
-  background: #f6f6f6;
 }
 
 body {
@@ -53,7 +54,7 @@ label:after {
 }
 
 header h1 {
-  margin: .6em 0 0;
+  margin: .3em 0 0;
 }
 header p {
   font-weight: bold;
@@ -90,7 +91,6 @@ textarea {
   min-height: 11em;
   border: none;
   cursor: pointer;
-  margin: 0 0 1em;
   font-size: .95em;
 }
 textarea:hover {
@@ -130,11 +130,15 @@ footer {
   .logo {
     margin: -1em -.5em 0 0;
   }
-  select {
+  .ui-combobox {
     float: none;
-    display: block;
+    display: block !important;
     min-width: 0;
-    max-width: 90%;
+    width: 260px;
+    margin: .2em 0;
+  }
+  header p {
+    margin: 0 0 .5em;
   }
 }
 
@@ -255,4 +259,7 @@ footer {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.ui-autocomplete-input {
+  margin: 0;
 }
