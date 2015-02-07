@@ -20,6 +20,9 @@
           $results = this.$results = $('.results', $element);
           $startFragments = this.$startFragments = $('.startFragment', $element);
 
+      // Replace non-existing elements by an empty text box
+      if (!$startFragments.length) $startFragments = this.$startFragments = $('<input>');
+
       // When a start fragment is selected, load the corresponding query set
       $startFragments.combobox({ valueKey: 'url', labelKey: 'name' });
       this._on($startFragments, { change: '_loadSelectedQuerySet' });
@@ -57,6 +60,7 @@
       // Set the list of start fragments
       case 'startFragments':
         $startFragments.combobox('option', 'options', value);
+        value[0] && this._setOption('startFragment', value[0].url);
         break;
       // Set the list of queries
       case 'queries':
