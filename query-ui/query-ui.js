@@ -11,7 +11,8 @@
 
     // Initializes the widget
     _create: function () {
-      var $element = this.element,
+      var options = this.options,
+          $element = this.element,
           $log = this.$log = $('.log', $element);
           $stop = this.$stop = $('.stop', $element);
           $start = this.$start = $('.start', $element);
@@ -29,9 +30,12 @@
 
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
-      $query.change(function () { $query.edited = true; });
+      $query.change(function () { options.query = $query.val(); $query.edited = true; });
       $queries.combobox({ valueKey: 'sparql', labelKey: 'name', onlyLabelTerms: true });
-      $queries.change(function (q) { if (q = $queries.val()) $query.val(q).edited = false; });
+      $queries.change(function (query) {
+        if (query = $queries.val())
+          $query.val(options.query = query).edited = false;
+      });
 
       // Set up starting and stopping
       this._on($start, { click: '_execute' });
@@ -43,8 +47,8 @@
       logger._print = function (items) { appendText($log, items.slice(2).join(' ').trim() + '\n'); };
 
       // Apply all options
-      for (var key in this.options)
-        this._setOption(key, this.options[key]);
+      for (var key in options)
+        this._setOption(key, options[key]);
     },
 
     // Sets a specific widget option
@@ -62,12 +66,17 @@
         $startFragments.combobox('option', 'options', value);
         value[0] && this._setOption('startFragment', value[0].url);
         break;
+      // Set the query
+      case 'query':
+        if (value !== $queries.val())
+          $queries.val(value).change();
+        break;
       // Set the list of queries
       case 'queries':
         $queries.combobox('option', 'options', value);
         // Automatically load the first query if the current query was not edited
         if (!this.$query.edited)
-          $queries.val(value.length ? value[0].sparql : '').change();
+          value[0] && this._setOption('query', value[0].sparql);
         break;
       // Set start fragments and query sets
       case 'queryCollection':
