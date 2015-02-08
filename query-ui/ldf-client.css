@@ -40,8 +40,8 @@ button {
   color: black;
   background-color: #f6f6f6;
   border-radius: 3px;
+  margin: 0;
   padding: 5px 8px;
-  margin-left: -1px;
   border: 1px solid #999999;
   cursor: pointer;
 }
@@ -72,6 +72,9 @@ fieldset {
   border: none;
   padding: 0;
 }
+.ldf-client, .ldf-client * {
+  max-width: 100%;
+}
 ul {
   list-style: none;
   padding: 0;
@@ -92,6 +95,7 @@ textarea {
   border: none;
   cursor: pointer;
   font-size: .95em;
+  background-color: transparent;
 }
 textarea:hover {
   color: #be1622;
@@ -99,11 +103,10 @@ textarea:hover {
 
 pre {
   width: 100%;
-  max-width: 640px;
   height: 25em;
   font-size: 9pt;
   overflow: scroll;
-  margin: .5em 0 1em;
+  margin: .5em -999999px 1em 0;
 }
 pre a {
   font-weight: normal;
@@ -130,6 +133,9 @@ footer {
   .logo {
     margin: -1em -.5em 0 0;
   }
+  header p {
+    margin: 0 0 .5em;
+  }
   .ui-combobox {
     float: none;
     display: block !important;
@@ -137,8 +143,8 @@ footer {
     width: 260px;
     margin: .2em 0;
   }
-  header p {
-    margin: 0 0 .5em;
+  pre {
+    max-width: 90%;
   }
 }
 
