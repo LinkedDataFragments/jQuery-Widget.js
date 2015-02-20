@@ -26,7 +26,10 @@
 
       // When a start fragment is selected, load the corresponding query set
       $startFragments.combobox({ valueKey: 'url', labelKey: 'name' });
-      this._on($startFragments, { change: '_loadSelectedQuerySet' });
+      this._on($startFragments, { change: function (startFragment) {
+        if (startFragment = $startFragments.val())
+          this._loadQuerySet(options.startFragment = startFragment);
+      }});
 
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
@@ -91,13 +94,12 @@
       }
     },
 
-    // Displays the query set that corresponds to the selected start fragment
-    _loadSelectedQuerySet: function () {
+    // Loads the query set corresponding to the given fragment
+    _loadQuerySet: function (startFragmentUrl) {
       var queryCollection = this.options.queryCollection,
-          querySets = queryCollection && queryCollection.querySets;
+          querySets = queryCollection && queryCollection.querySets, querySet;
       if (querySets) {
         // Find the corresponding query set
-        var startFragmentUrl = this.$startFragments.val(), querySet;
         queryCollection.startFragments.some(function (startFragment) {
           if (startFragment.url === startFragmentUrl && startFragment.querySet in querySets)
             return querySet = startFragment.querySet;
