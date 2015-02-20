@@ -5,9 +5,9 @@ jQuery(function ($) {
   var $queryui = $('.ldf-client').one('changeQuerySet', function () {
     // Restore the UI state upon entering and when the URL changes
     loadStateFromUrl();
-    window.addEventListener('popstate', loadStateFromUrl);
-    // Store the UI state in the URL when components change
-    $('*', $queryui).change(saveStateToUrl);
+    $(window).on('popstate', loadStateFromUrl);
+    // Store the UI state in the URL when the UI changes
+    $queryui.on('change', saveStateToUrl);
   });
 
   // Loads the UI state from the URL
