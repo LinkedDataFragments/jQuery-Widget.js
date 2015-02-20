@@ -26,9 +26,8 @@
 
       // When a start fragment is selected, load the corresponding query set
       $startFragments.combobox({ valueKey: 'url', labelKey: 'name' });
-      this._on($startFragments, { change: function (startFragment) {
-        if (startFragment = $startFragments.val())
-          this._loadQuerySet(options.startFragment = startFragment);
+      this._on($startFragments, { change: function () {
+        this._setOption('startFragment', $startFragments.val());
       }});
 
       // When a query is selected, load it into the editor
@@ -51,18 +50,21 @@
 
       // Apply all options
       for (var key in options)
-        this._setOption(key, options[key]);
+        this._setOption(key, options[key], true);
     },
 
     // Sets a specific widget option
-    _setOption: function (key, value) {
-      var self = this, $startFragments = this.$startFragments, $queries = this.$queries;
+    _setOption: function (key, value, initialize) {
+      if (!initialize && this.options[key] === value) return;
       this.options[key] = value;
+
+      // Apply the chosen option
+      var self = this, $startFragments = this.$startFragments, $queries = this.$queries;
       switch (key) {
       // Set the start fragment
       case 'startFragment':
-        if (value !== $startFragments.val())
-          $startFragments.val(value).change();
+        $startFragments.val(value).change();
+        this._loadQuerySet(value);
         break;
       // Set the list of start fragments
       case 'startFragments':
@@ -71,8 +73,7 @@
         break;
       // Set the query
       case 'query':
-        if (value !== $queries.val())
-          $queries.val(value).change();
+        $queries.val(value).change();
         break;
       // Set the list of queries
       case 'queries':
@@ -88,8 +89,6 @@
           return $.getJSON(value, function (querySet) { self._setOption(key, querySet); });
         // Load the start fragments, which will trigger query loading
         this._setOption('startFragments', value.startFragments);
-        if (!$startFragments.val() && value.startFragments.length)
-          $startFragments.val(value.startFragments[0].url).change();
         break;
       }
     },
