@@ -148,16 +148,20 @@
           resultsIterator.on('end', function () {
             resultCount || appendText($results, '(This query has no results.)');
           });
-        break;
-        // For CONSTRUCT queries, write a Turtle representation of all results
+          break;
+        // For CONSTRUCT and DESCRIBE queries, write a Turtle representation of all results
         case 'CONSTRUCT':
+        case 'DESCRIBE':
           var writer = new N3.Writer({ write: function (chunk, encoding, done) {
             appendText($results, chunk), done && done();
           }}, config);
           resultsIterator.on('data', function (triple) { writer.addTriple(triple); })
                          .on('end',  function () { writer.end(); });
-        break;
-        // Other queries are not supported at the moment
+          break;
+        // For ASK queries, write whether an answer exists
+        case 'ASK':
+          resultsIterator.on('data', function (exists) { appendText($results, exists); });
+          break;
         default:
           throw new Error('Unsupported query type: ' + resultsIterator.queryType);
       }
