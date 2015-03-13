@@ -13,12 +13,12 @@
     _create: function () {
       var options = this.options,
           $element = this.element,
-          $log = this.$log = $('.log', $element);
-          $stop = this.$stop = $('.stop', $element);
-          $start = this.$start = $('.start', $element);
-          $query = this.$query = $('.queryText', $element);
-          $queries = this.$queries = $('.query', $element);
-          $results = this.$results = $('.results', $element);
+          $log = this.$log = $('.log', $element),
+          $stop = this.$stop = $('.stop', $element),
+          $start = this.$start = $('.start', $element),
+          $query = this.$query = $('.queryText', $element),
+          $queries = this.$queries = $('.query', $element),
+          $results = this.$results = $('.results', $element),
           $startFragments = this.$startFragments = $('.startFragment', $element);
 
       // Replace non-existing elements by an empty text box
@@ -40,8 +40,8 @@
       });
 
       // Set up starting and stopping
-      this._on($start, { click: '_execute' });
-      this._on($stop,  { click: '_stopExecution' });
+      this._on(this.$start, { click: '_execute' });
+      this._on(this.$stop,  { click: '_stopExecution' });
 
       // Add log lines to the log element
       var logger = this._logger = new ldf.Logger();
@@ -116,15 +116,16 @@
     // Starts query execution
     _execute: function () {
       // Clear results and log, and scroll page to the results
-      $('html,body').animate({ scrollTop: $start.offset().top });
+      var $results = this.$results, $log = this.$log;
+      $('html,body').animate({ scrollTop: this.$start.offset().top });
       this.$stop.show();
       this.$start.hide();
-      this.$log.empty();
-      this.$results.empty();
+      $log.empty();
+      $results.empty();
 
       // Create a client to fetch the fragments through HTTP
       var config = { prefixes: prefixes, logger: this._logger };
-      config.fragmentsClient = new ldf.FragmentsClient($startFragments.val(), config);
+      config.fragmentsClient = new ldf.FragmentsClient(this.$startFragments.val(), config);
 
       // Create the iterator to solve the query
       var resultsIterator;
@@ -163,7 +164,7 @@
           resultsIterator.on('data', function (exists) { appendText($results, exists); });
           break;
         default:
-          throw new Error('Unsupported query type: ' + resultsIterator.queryType);
+          appendText($log, 'Unsupported query type: ' + resultsIterator.queryType);
       }
     },
 
