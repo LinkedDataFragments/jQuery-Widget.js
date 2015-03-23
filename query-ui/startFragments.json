@@ -28,5 +28,10 @@
     "name": "Ghent University Academic Bibliography",
     "url": "http://data.linkeddatafragments.org/ugent-biblio",
     "querySet": "ugent-biblio"
+  },
+  {
+    "name": "Linked Open Vocabularies",
+    "url": "http://data.linkeddatafragments.org/lov",
+    "querySet": "lov"
   }
 ]
