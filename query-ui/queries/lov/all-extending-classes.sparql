@@ -1,0 +1,6 @@
+# Find all classes extending dcat:Dataset
+prefix dcat: <http://www.w3.org/ns/dcat#>
+SELECT ?s WHERE {
+  ?s a rdfs:Class ; 
+       rdfs:subClassOf dcat:Dataset .
+}

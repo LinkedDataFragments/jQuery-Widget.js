@@ -1,0 +1,5 @@
+# Which licenses are used
+SELECT distinct ?license  WHERE {
+  ?ontology a owl:Ontology ;
+   dcterms:license ?license.
+}

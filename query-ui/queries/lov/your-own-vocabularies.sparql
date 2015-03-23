@@ -1,0 +1,8 @@
+# Find your own vocabularies
+prefix vann: <http://purl.org/vocab/vann/>
+SELECT distinct ?ontology ?prefix WHERE {
+  ?ontology a owl:Ontology ;
+   vann:preferredNamespacePrefix ?prefix;
+  dcterms:creator [ foaf:name "Pieter Colpaert" ] .
+}
+LIMIT 100
