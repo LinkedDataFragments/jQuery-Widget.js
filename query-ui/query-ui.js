@@ -173,7 +173,7 @@
       this.$stop.hide();
       this.$start.show();
       this._resultsIterator && this._resultsIterator.removeAllListeners();
-      error && error.message && $results.text(error.message);
+      error && error.message && this.$results.text(error.message);
     },
   });
 
