@@ -173,6 +173,7 @@
       this.$stop.hide();
       this.$start.show();
       this._resultsIterator && this._resultsIterator.removeAllListeners();
+      ldf.HttpClient.abortAll && ldf.HttpClient.abortAll();
       error && error.message && this.$results.text(error.message);
     },
   });
