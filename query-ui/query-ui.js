@@ -124,8 +124,10 @@
       $results.empty();
 
       // Create a client to fetch the fragments through HTTP
-      var config = { prefixes: prefixes, logger: this._logger };
-      config.fragmentsClient = new ldf.FragmentsClient(this.$startFragments.val(), config);
+      var config = { prefixes: prefixes, logger: this._logger },
+          startFragments = this.$startFragments.val().split(/[ \t,;]+/)
+                               .filter(function (s) { return /^https?:\/\//.test(s); });
+      config.fragmentsClient = new ldf.FragmentsClient(startFragments, config);
 
       // Create the iterator to solve the query
       var resultsIterator;
