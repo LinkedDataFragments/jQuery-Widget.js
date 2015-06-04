@@ -10,6 +10,7 @@ var fs = require('fs'),
 var sourceDir =__dirname,
     outputDir = ensureExists(path.join(sourceDir, 'build')),
     scriptsDir = ensureExists(path.join(outputDir, 'scripts')),
+    imagesDir = ensureExists(path.join(outputDir, 'images')),
     html = fs.readFileSync(path.join(sourceDir, 'index.html'), 'utf8');
 
 // Bundle all script files into a single script
@@ -38,6 +39,9 @@ html = html.replace(/<link[^>]*ldf-client[^>]*>/, '\n<style>' + style + '</style
 
 // Copy auxiliary files
 copy(path.join(sourceDir, 'queries.json'), path.join(outputDir, 'queries.json'));
+fs.readdirSync(path.join(sourceDir, 'images')).forEach(function (image) {
+  copy(path.join(sourceDir, 'images', image), path.join(imagesDir, image));
+});
 
 // Write the output HTML
 fs.writeFileSync(path.join(outputDir, 'index.html'), html);

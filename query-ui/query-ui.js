@@ -5,7 +5,7 @@
   $.widget('ldf.queryui', {
     // Default widget options
     options: {
-      startFragments: [],
+      availableDatasources: [],
       queries: [],
     },
 
@@ -19,15 +19,18 @@
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
           $results = this.$results = $('.results', $element),
-          $startFragments = this.$startFragments = $('.startFragment', $element);
+          $datasources = this.$datasources = $('.datasources', $element);
 
       // Replace non-existing elements by an empty text box
-      if (!$startFragments.length) $startFragments = this.$startFragments = $('<input>');
+      if (!$datasources.length) $datasources = this.$datasources = $('<input>');
 
       // When a start fragment is selected, load the corresponding query set
-      $startFragments.combobox({ valueKey: 'url', labelKey: 'name' });
-      this._on($startFragments, { change: function () {
-        this._setOption('startFragment', $startFragments.val());
+      $datasources.chosen({
+        create_option: true, persistent_create_option: true, skip_no_results: true,
+        display_selected_options: false, placeholder_text: ' ', create_option_text: 'Add datasource',
+      });
+      this._on($datasources, { change: function () {
+        this._setOption('datasources', $datasources.val());
       }});
 
       // When a query is selected, load it into the editor
@@ -59,17 +62,30 @@
       this.options[key] = value;
 
       // Apply the chosen option
-      var self = this, $startFragments = this.$startFragments, $queries = this.$queries;
+      var self = this, $datasources = this.$datasources, $queries = this.$queries;
       switch (key) {
-      // Set the start fragment
-      case 'startFragment':
-        $startFragments.val(value).change();
-        this._loadQuerySet(value);
+      // Set the datasources to query
+      case 'datasources':
+        // Select datasources that already existed
+        var selected = (value || []).reduce(function (d, k) { return d[k] = false, d; }, {});
+        $datasources.children().each(function () {
+          var $option = $(this), url = $(this).val();
+          $option.attr('selected', url in selected);
+          selected[url] = true;
+        });
+        // Add and select datasources that didn't exist yet
+        $datasources.append($.map(selected, function (exists, url) {
+          return exists ? null : $('<option>', { text: url, value: url, selected: true });
+        })).trigger('chosen:updated');
+        // Update the query set
+        if (value && value[0])
+          this._loadQuerySet(value[0]);
         break;
-      // Set the list of start fragments
-      case 'startFragments':
-        $startFragments.combobox('option', 'options', value);
-        value[0] && this._setOption('startFragment', value[0].url);
+      // Set the datasources available for querying
+      case 'availableDatasources':
+        $datasources.empty().append((value || []).map(function (datasource, index) {
+          return $('<option>', { text: datasource.name, value: datasource.url, selected: index === 0 });
+        })).trigger('chosen:updated').change();
         break;
       // Set the query
       case 'query':
@@ -88,7 +104,7 @@
         if (typeof value === 'string')
           return $.getJSON(value, function (querySet) { self._setOption(key, querySet); });
         // Load the start fragments, which will trigger query loading
-        this._setOption('startFragments', value.startFragments);
+        this._setOption('availableDatasources', value.startFragments);
         break;
       }
     },
@@ -115,6 +131,10 @@
 
     // Starts query execution
     _execute: function () {
+     var datasources = this.$datasources.val();
+      if (!datasources || !datasources.length)
+        return alert('Please choose a datasource to execute the query.');
+
       // Clear results and log, and scroll page to the results
       var $results = this.$results, $log = this.$log;
       $('html,body').animate({ scrollTop: this.$start.offset().top });
@@ -124,10 +144,8 @@
       $results.empty();
 
       // Create a client to fetch the fragments through HTTP
-      var config = { prefixes: prefixes, logger: this._logger },
-          startFragments = this.$startFragments.val().split(/[ \t,;]+/)
-                               .filter(function (s) { return /^https?:\/\//.test(s); });
-      config.fragmentsClient = new ldf.FragmentsClient(startFragments, config);
+      var config = { prefixes: prefixes, logger: this._logger };
+      config.fragmentsClient = new ldf.FragmentsClient(datasources, config);
 
       // Create the iterator to solve the query
       var resultsIterator;

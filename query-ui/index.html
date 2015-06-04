@@ -6,6 +6,7 @@
   <title>Linked Data Fragments client</title>
   <script src="../deps/jquery-2.1.0.js"></script>
   <script src="../deps/jquery-ui-1.11.2-custom.js"></script>
+  <script src="../deps/chosen-1.1.0.js"></script>
   <script src="../deps/ldf-client-browser.js"></script>
   <script src="../deps/prefixes.js"></script>
   <script src="combobox.js"></script>
@@ -39,8 +40,8 @@
     <fieldset class="ldf-client">
       <ul>
         <li>
-          <label>Choose a data source</label>
-          <input class="startFragment" />
+          <label>Choose datasources</label>
+          <select class="datasources" multiple></select>
         </li>
 
         <li>
