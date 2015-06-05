@@ -2,7 +2,48 @@
 // jQuery widget for triple pattern fragments query execution
 
 (function ($) {
-  $.widget('ldf.queryui', {
+  // Query UI main entry point, which mimics the jQuery UI widget interface:
+  // - $(element).queryui(options) initializes the widget
+  // - $(element).queryui('option', [key], [value]) gets or sets one or all options
+  $.fn.queryui = function (operation, option, value) {
+    // Shift parameters if no operation given
+    if (typeof operation !== 'string')
+      value = option, option = operation, operation = 'init';
+
+    // Apply the operation to all elements; if one element yields a value, stop and return it
+    var result = this;
+    for (var i = 0; i < this.length && result === this; i++) {
+      var $element = $(this[i]), queryui = $element.data('queryui');
+      switch (operation) {
+        // initialize the element as a Query UI
+        case 'init':
+          if (!queryui) {
+            $element.data('queryui', queryui = new LdfQueryUI($element, option));
+            queryui._create();
+          }
+          break;
+        // set an option of a Query UI
+        case 'option':
+          if (!queryui) throw new Error('Query UI not activated on this element');
+          // retrieve all options
+          if (option === undefined)     result = queryui.options;
+          // retrieve a specific option
+          else if (value === undefined) result = queryui.options[value];
+          // set a specific option
+          else queryui._setOption(option, value);
+          break;
+      }
+    }
+    return result;
+  };
+
+  // Creates a new Query UI interface for the given element
+  function LdfQueryUI($element, options) {
+    this.element = $element;
+    this.options = $.extend({}, this.options, options);
+  }
+
+  $.extend(LdfQueryUI.prototype, {
     // Default widget options
     options: {
       availableDatasources: [],
@@ -11,7 +52,8 @@
 
     // Initializes the widget
     _create: function () {
-      var options = this.options,
+      var self = this,
+          options = this.options,
           $element = this.element,
           $log = this.$log = $('.log', $element),
           $stop = this.$stop = $('.stop', $element),
@@ -29,9 +71,7 @@
         create_option: true, persistent_create_option: true, skip_no_results: true,
         display_selected_options: false, placeholder_text: ' ', create_option_text: 'Add datasource',
       });
-      this._on($datasources, { change: function () {
-        this._setOption('datasources', $datasources.val());
-      }});
+      $datasources.change(function () { self._setOption('datasources', $datasources.val()); });
 
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
@@ -43,8 +83,8 @@
       });
 
       // Set up starting and stopping
-      this._on(this.$start, { click: '_execute' });
-      this._on(this.$stop,  { click: '_stopExecution' });
+      $start.click(this._execute.bind(this));
+      $stop.click(this._stopExecution.bind(this));
 
       // Add log lines to the log element
       var logger = this._logger = new ldf.Logger();
