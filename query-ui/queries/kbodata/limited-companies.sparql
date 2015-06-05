@@ -1,4 +1,5 @@
 # Names of limited companies
+# Datasource: http://data.kbodata.be/fragments
 CONSTRUCT {
     ?organisation skos:prefLabel ?label.
 }

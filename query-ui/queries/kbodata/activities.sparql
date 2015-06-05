@@ -1,4 +1,5 @@
 # Activities of corporations of public law
+# Datasource: http://data.kbodata.be/fragments
 SELECT DISTINCT ?activity WHERE {
     ?organisation <http://www.w3.org/ns/regorg#orgType> [
         skos:prefLabel "Société anonyme de droit public"@fr

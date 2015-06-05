@@ -1,4 +1,5 @@
 # Names and addresses of Telecom companies
+# Datasource: http://data.kbodata.be/fragments
 PREFIX locn: <http://www.w3.org/ns/locn#>
 SELECT ?name ?address WHERE {
    ?organisation skos:prefLabel ?name.

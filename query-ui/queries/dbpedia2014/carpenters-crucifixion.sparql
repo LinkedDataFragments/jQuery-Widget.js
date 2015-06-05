@@ -1,4 +1,5 @@
 # Carpenters killed by crucifixion
+# Datasource: http://fragments.dbpedia.org/2014/en
 PREFIX yago: <http://dbpedia.org/class/yago/>
 SELECT ?person
 WHERE {

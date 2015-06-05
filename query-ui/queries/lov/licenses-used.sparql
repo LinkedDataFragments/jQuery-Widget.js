@@ -1,5 +1,6 @@
 # Which licenses are used
+# Datasource: http://data.linkeddatafragments.org/lov
 SELECT distinct ?license  WHERE {
   ?ontology a owl:Ontology ;
-   dcterms:license ?license.
+   dc:license ?license.
 }

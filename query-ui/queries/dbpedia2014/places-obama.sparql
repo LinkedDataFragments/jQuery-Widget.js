@@ -1,4 +1,5 @@
 # Places that have something to do with Barack Obama
+# Datasource: http://fragments.dbpedia.org/2014/en
 SELECT ?place ?relation
 WHERE {
   ?place rdf:type dbpedia-owl:Settlement;

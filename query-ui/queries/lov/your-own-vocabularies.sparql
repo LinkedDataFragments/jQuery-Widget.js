@@ -1,8 +1,9 @@
 # Find your own vocabularies
+# Datasource: http://data.linkeddatafragments.org/lov
 prefix vann: <http://purl.org/vocab/vann/>
 SELECT distinct ?ontology ?prefix WHERE {
   ?ontology a owl:Ontology ;
    vann:preferredNamespacePrefix ?prefix;
-  dcterms:creator [ foaf:name "Pieter Colpaert" ] .
+  dc:creator [ foaf:name "Pieter Colpaert" ] .
 }
 LIMIT 100

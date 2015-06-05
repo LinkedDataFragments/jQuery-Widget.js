@@ -1,4 +1,4 @@
-# 1. Show 100 triples
+# 10000. Show 100 triples
 CONSTRUCT WHERE {
   ?s ?p ?o.
 }

@@ -1,4 +1,5 @@
 # Desserts made with plants
+# Datasource: http://fragments.dbpedia.org/2014/en
 SELECT ?dessert ?fruit
 WHERE {
   ?dessert dbpedia-owl:type <http://dbpedia.org/resource/Dessert>;

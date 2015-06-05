@@ -1,4 +1,4 @@
-# 3. List things and their labels
+# 10200. List things and their labels
 SELECT DISTINCT ?subject ?label WHERE {
   { ?subject dc:title ?label }
   UNION

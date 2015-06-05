@@ -6,50 +6,69 @@ var fs = require('fs'),
     path = require('path');
 
 var queryDir = path.join(__dirname, '/queries/'),
-    startFragmentsFile = path.join(__dirname, '/startFragments.json'),
+    datasourcesFile = path.join(__dirname, '/datasources.json'),
     outputFile = path.join(__dirname, '/queries.json');
 
-// Create a query set for each subfolder
-var querySets = fs.readdirSync(queryDir).reduce(function (querySets, dir) {
-  return querySets[dir] = readQueries(path.join(queryDir, dir)), querySets;
-}, {});
+// Write the datasources and queries to the output file
+fs.writeFileSync(outputFile, JSON.stringify({
+  datasources: JSON.parse(fs.readFileSync(datasourcesFile, { encoding: 'utf8' })),
+  queries: readQueryDirectory(queryDir)
+           // Sort by ascending priority and name
+           .sort(function (a, b) {
+              return (a.priority - b.priority) ||
+                     (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+            })
+            // Remove priority numbers in output
+            .map(function (d) { return delete d.priority, d; }),
+}));
 
-// Create queries for each of the query files in the folder
-function readQueries(directory) {
-  var priorities = {};
-  return fs.readdirSync(directory)
-  .filter(function (f) { return /\.sparql$/.test(f); })
-  .map(function (queryFile) {
-    var query = fs.readFileSync(path.join(directory, queryFile), { encoding: 'utf8' }),
-        name = queryFile.replace(/\.\w+$/, ''), priority = 1000;
-
-    // Try to extract the name for the query from a comment line
-    var lines = query.split('\n'), firstLine = lines.shift() || '';
-    if (firstLine[0] === '#') {
-      // Remote the name from the query
-      query = lines.join('\n');
-      name = firstLine.replace(/#\s*/, '');
-      // If the name begins with a number, this number indicates the priority
-      if (/^\d/.test(name)) {
-        priority = parseInt(name, 10);
-        name = name.replace(/^\d+\W\s*/, '');
-      }
-    }
-    priorities[name] = priority;
-
-    return { name: name, sparql: query.trim() };
-  })
-  .sort(function (a, b) {
-    return (priorities[a.name] - priorities[b.name]) ||
-           (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
-  });
+// Recursively reads queries in the given directory
+function readQueryDirectory(directory) {
+  return [].concat.apply([], fs.readdirSync(directory).map(function (filename) {
+    filename = path.join(directory, filename);
+    if (fs.statSync(filename).isDirectory())
+      return readQueryDirectory(filename);
+    else if (/\.sparql$/.test(filename))
+      return readQuery(filename);
+  }));
 }
 
-// Read the start fragments
-var startFragments = JSON.parse(fs.readFileSync(startFragmentsFile, { encoding: 'utf8' }));
+// Creates a query from the file
+function readQuery(queryFile) {
+  // Construct the initial query
+  var query = { sparql: fs.readFileSync(queryFile, { encoding: 'utf8' }),
+                name: queryFile.replace(/^.+\/|\.\w+$/g, ''),
+                priority: 1000, datasources: [] };
 
-// Write the start fragments and query sets to the output file
-fs.writeFileSync(outputFile, JSON.stringify({
-  startFragments: startFragments,
-  querySets: querySets,
-}));
+  // Parse SPARQL comments for metadata
+  var inputLines = query.sparql.split('\n'), outputLines = [];
+  inputLines.forEach(function (line, index) {
+    // The line might be a key/value pair
+    var keyValue = line.match(/^#\s*(\w+)\s*:\s*(.*)\s*/);
+    if (keyValue) {
+      var key = keyValue[1].toLowerCase(), value = keyValue[2];
+      switch (key) {
+        case 'datasource':
+        case 'datasources':
+          value.split(/\s+/)
+               .forEach(function (d) { if (d.length) query.datasources.push(d); });
+          return;
+      }
+    }
+    // The first line might contain a name
+    if (index === 0 && line[0] === '#') {
+      query.name = line.replace(/#\s*/, '');
+      // A number preceding the name indicates the priority
+      if (/^\d/.test(query.name)) {
+        query.priority = parseInt(query.name, 10);
+        query.name = query.name.replace(/^\d+\W\s*/, '');
+      }
+    }
+    // Any other line is part of the query
+    else {
+      outputLines.push(line);
+    }
+  });
+  query.sparql = outputLines.join('\n').trim();
+  return query;
+}

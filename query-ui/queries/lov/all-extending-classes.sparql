@@ -1,4 +1,5 @@
 # Find all classes extending dcat:Dataset
+# Datasource: http://data.linkeddatafragments.org/lov
 prefix dcat: <http://www.w3.org/ns/dcat#>
 SELECT ?s WHERE {
   ?s a rdfs:Class ; 

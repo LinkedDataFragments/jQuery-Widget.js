@@ -1,7 +1,0 @@
-# Other bands The Beatles played in
-CONSTRUCT { ?otherBand dbpedia-owl:formerBandMember ?member }
-WHERE {
-  ?band foaf:name "The Beatles"@en;
-        dbpedia-owl:bandMember ?member.
-  ?otherBand dbpedia-owl:formerBandMember ?member.
-}

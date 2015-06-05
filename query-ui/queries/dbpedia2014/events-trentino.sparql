@@ -1,4 +1,5 @@
 # Events that took place in the Trentino region
+# Datasource: http://fragments.dbpedia.org/2014/en
 SELECT DISTINCT ?entity ?event
 WHERE {
   ?entity a dbpedia-owl:Event;

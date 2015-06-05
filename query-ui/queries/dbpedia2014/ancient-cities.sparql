@@ -1,4 +1,5 @@
 # Ancient cities with a population larger than 50.000
+# Datasource: http://fragments.dbpedia.org/2014/en
 SELECT * WHERE {
   ?city rdf:type <http://dbpedia.org/class/yago/AncientCities>;
         dbpedia-owl:populationTotal ?popTotal.

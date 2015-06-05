@@ -1,4 +1,5 @@
 # Artists influenced by Picasso
+# Datasource: http://fragments.dbpedia.org/2014/en
 CONSTRUCT {
   ?artist a dbpedia-owl:Artist.
   ?artist dbpedia-owl:birthDate ?date.

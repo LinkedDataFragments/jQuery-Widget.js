@@ -1,4 +1,4 @@
-# 2. Explore object types
+# 10300. Explore object types
 SELECT DISTINCT ?type ?label WHERE {
   ?s a ?type.
   OPTIONAL {

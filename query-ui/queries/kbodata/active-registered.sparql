@@ -1,4 +1,5 @@
 # Active registered organizations
+# Datasource: http://data.kbodata.be/fragments
 PREFIX rov: <http://www.w3.org/ns/regorg#>
 PREFIX oslo: <http://purl.org/oslo/ns/localgov#>
 

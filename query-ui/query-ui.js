@@ -66,10 +66,11 @@
       // Replace non-existing elements by an empty text box
       if (!$datasources.length) $datasources = this.$datasources = $('<input>');
 
-      // When a start fragment is selected, load the corresponding query set
+      // When a datasource is selected, load the corresponding query set
       $datasources.chosen({
-        create_option: true, persistent_create_option: true, skip_no_results: true,
-        display_selected_options: false, placeholder_text: ' ', create_option_text: 'Add datasource',
+        create_option: true, persistent_create_option: true,
+        skip_no_results: true, search_contains: true, display_selected_options: false,
+        placeholder_text: ' ', create_option_text: 'Add datasource',
       });
       $datasources.change(function () { self._setOption('datasources', $datasources.val()); });
 
@@ -102,74 +103,77 @@
       this.options[key] = value;
 
       // Apply the chosen option
-      var self = this, $datasources = this.$datasources, $queries = this.$queries;
+      var self = this, $datasources = this.$datasources, $queries = this.$queries, selected;
       switch (key) {
       // Set the datasources to query
       case 'datasources':
-        // Select datasources that already existed
-        var selected = (value || []).reduce(function (d, k) { return d[k] = false, d; }, {});
+        // Select chosen datasources that were already in the list
+        selected = toHash(value);
         $datasources.children().each(function () {
           var $option = $(this), url = $(this).val();
           $option.attr('selected', url in selected);
           selected[url] = true;
         });
-        // Add and select datasources that didn't exist yet
+        // Add and select chosen datasources that were not in the list yet
         $datasources.append($.map(selected, function (exists, url) {
           return exists ? null : $('<option>', { text: url, value: url, selected: true });
         })).trigger('chosen:updated');
         // Update the query set
-        if (value && value[0])
-          this._loadQuerySet(value[0]);
+        this._loadQueries(value || []);
         break;
       // Set the datasources available for querying
       case 'availableDatasources':
+        // Create options for each datasource, selecting them if they had been chosen
+        selected = toHash(this.options.datasources);
         $datasources.empty().append((value || []).map(function (datasource, index) {
-          return $('<option>', { text: datasource.name, value: datasource.url, selected: index === 0 });
+          return $('<option>', { text: datasource.name, value: datasource.url,
+                   selected: (datasource.url in selected) || selected._none && index === 0 });
         })).trigger('chosen:updated').change();
         break;
       // Set the query
       case 'query':
-        this.$query.val(value);
+        this.$query.val(value).change();
         $queries.children().each(function () { $(this).attr('selected', $(this).val() === value); });
         $queries.trigger('chosen:updated');
         break;
       // Set the list of queries
       case 'queries':
         $queries.empty().append($('<option>'), (value || []).map(function (query) {
-          return $('<option>', { text: query.name, value: query.sparql });
+          return $('<option>', { text: query.name, value: query.sparql,
+                                 selected: self.options.query === query.sparql });
         })).trigger('chosen:updated').change();
-        // Automatically load the first query if the current query was not edited
-        if (!this.$query.edited)
+        // Load the first query if the current query was not edited and not in the list
+        if (!this.$query.edited && (!this.$query.val() || this.$query.val() !== $queries.val()))
           value[0] && this._setOption('query', value[0].sparql);
         break;
-      // Set start fragments and query sets
-      case 'queryCollection':
+      // Set datasources and queries
+      case 'querySet':
         // If the collection is given as a string, fetch through HTTP
         if (typeof value === 'string')
           return $.getJSON(value, function (querySet) { self._setOption(key, querySet); });
-        // Load the start fragments, which will trigger query loading
-        this._setOption('availableDatasources', value.startFragments);
+        // Load the datasources, which will trigger query loading
+        this._setOption('availableDatasources', value.datasources);
         break;
       }
     },
 
-    // Loads the query set corresponding to the given fragment
-    _loadQuerySet: function (startFragmentUrl) {
-      var queryCollection = this.options.queryCollection,
-          querySets = queryCollection && queryCollection.querySets, querySet;
-      if (querySets) {
-        // Find the corresponding query set
-        queryCollection.startFragments.some(function (startFragment) {
-          if (startFragment.url === startFragmentUrl && startFragment.querySet in querySets)
-            return querySet = startFragment.querySet;
-        }, this);
-        querySet = querySet || 'default';
-        // Load the query set if not already loaded
-        if (querySet !== this._querySet) {
-          this._querySet = querySet;
-          this._setOption('queries', querySets[this._querySet] || []);
-          this.element.trigger('changeQuerySet');
-        }
+    // Load queries relevant for the given datasources
+    _loadQueries: function (datasources) {
+      datasources = toHash(datasources);
+      var queries = (this.options.querySet.queries || []).filter(function (query, index) {
+        query.id = index;
+        // Include the query if it indicates no datasources,
+        // or if it is relevant for at least one datasource
+        return !query.datasources || !query.datasources.length ||
+               query.datasources.some(function (d) { return d in datasources; });
+      });
+
+      // Load the set of queries if it is different from the current set
+      var querySetId = queries.map(function (q) { return q.id; }).join();
+      if (this._querySetId !== querySetId) {
+        this._querySetId = querySetId;
+        this._setOption('queries', queries);
+        this.element.trigger('changeQuerySet');
       }
     },
 
@@ -248,9 +252,21 @@
       $element.append((arguments[i] + '').replace(/(<)|(>)|(&)|(https?:\/\/[^\s<>]+)/g, escape));
     $element.scrollTop(1E10);
   }
+
   // Escapes special HTML characters and convert URLs into links
   function escape(match, lt, gt, amp, url) {
     return lt && '&lt;' || gt && '&gt;' || amp && '&amp;' ||
            $('<a>', { href: url, target: '_blank', text: url })[0].outerHTML;
+  }
+
+  // Converts the array to a hash with the elements as keys
+  function toHash(array) {
+    var hash = {}, length = array ? array.length : 0;
+    if (!length)
+      hash._none = true;
+    else
+      for (var i = 0; i < length; i++)
+        hash[array[i]] = false;
+    return hash;
   }
 })(jQuery);
