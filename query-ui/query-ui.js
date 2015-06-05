@@ -36,7 +36,7 @@
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
       $query.change(function () { options.query = $query.val(); $query.edited = true; });
-      $queries.combobox({ valueKey: 'sparql', labelKey: 'name', onlyLabelTerms: true });
+      $queries.chosen({ skip_no_results: true, placeholder_text: ' ' });
       $queries.change(function (query) {
         if (query = $queries.val())
           $query.val(options.query = query).edited = false;
@@ -89,11 +89,15 @@
         break;
       // Set the query
       case 'query':
-        $queries.val(value).change();
+        this.$query.val(value);
+        $queries.children().each(function () { $(this).attr('selected', $(this).val() === value); });
+        $queries.trigger('chosen:updated');
         break;
       // Set the list of queries
       case 'queries':
-        $queries.combobox('option', 'options', value);
+        $queries.empty().append($('<option>'), (value || []).map(function (query) {
+          return $('<option>', { text: query.name, value: query.sparql });
+        })).trigger('chosen:updated').change();
         // Automatically load the first query if the current query was not edited
         if (!this.$query.edited)
           value[0] && this._setOption('query', value[0].sparql);

@@ -231,15 +231,13 @@ footer {
   padding: 0 0 0 8px;
   height: 25px;
   border: 1px solid #999999;
-  border-radius: 5px;
+  border-radius: 3px;
   background-color: #fff;
-  color: #444;
   text-decoration: none;
   white-space: nowrap;
   line-height: 24px;
-}
-.chosen-single .chosen-default {
-  color: #999;
+  font-weight: normal;
+  color: inherit;
 }
 .chosen-single .chosen-single span {
   display: block;
@@ -295,7 +293,6 @@ footer {
   background: white url('images/chosen-sprite.png') no-repeat 100% -20px;
   background: url('images/chosen-sprite.png') no-repeat 100% -20px;
   font-size: 1em;
-  font-family: sans-serif;
   line-height: normal;
   border-radius: 0;
 }
@@ -310,7 +307,6 @@ footer {
 }
 
 .chosen-results {
-  color: #444;
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
@@ -337,9 +333,7 @@ li.highlighted {
   color: #fff;
 }
 li.no-results {
-  color: #777;
-  display: list-item;
-  background: #f4f4f4;
+  display: none;
 }
 .chosen-results li em {
   font-style: normal;
@@ -374,8 +368,6 @@ li.search-field input[type="text"] {
   height: 20px;
   outline: 0;
   border: 0 !important;
-  background: transparent !important;
-  color: #999;
   font-size: 100%;
   line-height: normal;
   border-radius: 0;
@@ -386,8 +378,7 @@ li.search-choice {
   padding: 3px 20px 3px 5px;
   max-width: 100%;
   border-radius: 3px;
-  background-color: #ececec;
-  color: #333;
+  background-color: #f6f6f6;
   line-height: 13px;
   cursor: default;
 }
@@ -419,13 +410,9 @@ li.search-choice-focus .search-choice-close {
 }
 .chosen-drop .result-selected {
   display: list-item;
-  color: #ccc;
   cursor: default;
 }
 
-.chosen-active .chosen-single {
-  border: 1px solid #be1622;
-}
 .chosen-active.chosen-with-drop .chosen-single {
   border: 1px solid #999999;
   border-bottom-right-radius: 0;
@@ -433,16 +420,12 @@ li.search-choice-focus .search-choice-close {
 }
 .chosen-active.chosen-with-drop .chosen-single div {
   border-left: none;
-  background: transparent;
 }
 .chosen-active.chosen-with-drop .chosen-single div b {
   background-position: -18px 2px;
 }
 .chosen-active .chosen-choices {
   max-height: 500px;
-}
-.chosen-active .chosen-choices li.search-field input[type="text"] {
-  color: #222 !important;
 }
 
 
@@ -458,120 +441,4 @@ li.search-choice-focus .search-choice-close {
     background-size: 52px 37px !important;
     background-repeat: no-repeat !important;
   }
-}
-
-
-
-/* Styling below derived from
- * jQuery UI - v1.11.2 - 2015-01-12
- * http://jqueryui.com
- * Copyright 2015 jQuery Foundation and other contributors; Licensed MIT */
-
-/* UI states */
-.ui-helper-hidden-accessible { display: none; }
-.ui-state-default, .ui-widget-content {
-	border: 1px solid #999999;
-	background: #f6f6f6;
-}
-.ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover,
-.ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus {
-  color: #be1622;
-	border: 1px solid;
-}
-
-/* Corner radius */
-.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
-	border-top-left-radius: 4px;
-}
-.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
-	border-top-right-radius: 4px;
-}
-.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
-	border-bottom-left-radius: 4px;
-}
-.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
-	border-bottom-right-radius: 4px;
-}
-
-/* autocomplete */
-.ui-autocomplete {
-	position: absolute;
-	top: 0;
-	left: 0;
-	cursor: default;
-}
-
-/* button */
-.ui-button {
-  color: black;
-	display: inline-block;
-	position: relative;
-	line-height: normal;
-	cursor: pointer;
-	text-align: center;
-	overflow: visible; /* removes extra width in IE */
-}
-.ui-button, .ui-button:link, .ui-button:visited, .ui-button:hover, .ui-button:active {
-	text-decoration: none;
-}
-.ui-button:active {
-  padding: 1px 0 0 0px;
-}
-
-/* menu */
-.ui-menu {
-	list-style: none;
-	margin: 0;
-	display: block;
-	outline: none;
-  max-height: 400px;
-  overflow-x: scroll;
-}
-.ui-menu-item {
-	position: relative;
-  margin: 0;
-	padding: 3px 0 3px 0;
-	cursor: pointer;
-	min-height: 0; /* support: IE7 */
-	/* support: IE10, see #8844 */
-	list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
-}
-.ui-menu .ui-state-focus, .ui-menu .ui-state-active {
-	margin: -1px;
-}
-
-/* combobox */
-.ui-combobox {
-  position: relative;
-  display: inline-block;
-  padding-right: 25px;
-}
-.ui-combobox input {
-  width: 100%;
-}
-.ui-combobox .ui-button {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  width: 20px;
-}
-.ui-autocomplete .ui-menu-item {
-  width: 100%;
-}
-.ui-autocomplete .value {
-  font-weight: bold;
-}
-.ui-autocomplete .label {
-  font-size: .9em;
-}
-.ui-autocomplete .value, .ui-autocomplete .label {
-  padding: 0 7px;
-  display: block;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.ui-autocomplete-input {
-  margin: 0;
 }
