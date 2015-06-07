@@ -99,17 +99,22 @@
 
     // Sets a specific widget option
     _setOption: function (key, value, initialize) {
-      if (!initialize && this.options[key] === value) return;
-      this.options[key] = value;
+      var options = this.options;
+      if (!initialize && options[key] === value) return;
+      options[key] = value;
 
       // Apply the chosen option
-      var self = this, $datasources = this.$datasources, $queries = this.$queries, selected;
+      var self = this, $datasources = this.$datasources, $queries = this.$queries;
       switch (key) {
       // Set the datasources to query
       case 'datasources':
+        // Choose the first available datasource if none was chosen
+        var $options = $datasources.children();
+        if (!(value && value.length) && $options.length)
+          options[key] = value = [$options.val()];
         // Select chosen datasources that were already in the list
-        selected = toHash(value);
-        $datasources.children().each(function () {
+        var selected = toHash(value);
+        $options.each(function (index) {
           var $option = $(this), url = $(this).val();
           $option.attr('selected', url in selected);
           selected[url] = true;
@@ -119,16 +124,16 @@
           return exists ? null : $('<option>', { text: url, value: url, selected: true });
         })).trigger('chosen:updated');
         // Update the query set
-        this._loadQueries(value || []);
+        this._loadQueries(value);
         break;
       // Set the datasources available for querying
       case 'availableDatasources':
-        // Create options for each datasource, selecting them if they had been chosen
-        selected = toHash(this.options.datasources);
+        // Create options for each datasource
         $datasources.empty().append((value || []).map(function (datasource, index) {
-          return $('<option>', { text: datasource.name, value: datasource.url,
-                   selected: (datasource.url in selected) || selected._none && index === 0 });
-        })).trigger('chosen:updated').change();
+          return $('<option>', { text: datasource.name, value: datasource.url });
+        }));
+        // Restore selected datasources
+        this._setOption('datasources', options.datasources, true);
         break;
       // Set the query
       case 'query':
@@ -262,11 +267,8 @@
   // Converts the array to a hash with the elements as keys
   function toHash(array) {
     var hash = {}, length = array ? array.length : 0;
-    if (!length)
-      hash._none = true;
-    else
-      for (var i = 0; i < length; i++)
-        hash[array[i]] = false;
+    for (var i = 0; i < length; i++)
+      hash[array[i]] = false;
     return hash;
   }
 })(jQuery);
