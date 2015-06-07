@@ -1,26 +1,25 @@
 #!/usr/bin/env node
 /*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
-/* Builds the query files into a JSON file. */
+/* Merges the queries from the 'queries' folder into 'settings.json'. */
 
 var fs = require('fs'),
     path = require('path');
 
-var queryDir = path.join(__dirname, '/queries/'),
-    datasourcesFile = path.join(__dirname, '/datasources.json'),
-    outputFile = path.join(__dirname, '/queries.json');
+var queryDir = path.join(__dirname, 'queries'),
+    settingsFile = path.join(__dirname, 'settings.json'),
+    outputFile = path.join(__dirname, 'queries.json');
 
-// Write the datasources and queries to the output file
-fs.writeFileSync(outputFile, JSON.stringify({
-  datasources: JSON.parse(fs.readFileSync(datasourcesFile, { encoding: 'utf8' })),
-  queries: readQueryDirectory(queryDir)
-           // Sort by ascending priority and name
-           .sort(function (a, b) {
-              return (a.priority - b.priority) ||
-                     (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
-            })
-            // Remove priority numbers in output
-            .map(function (d) { return delete d.priority, d; }),
-}));
+// Write the settings with queries to the output file
+var settings = JSON.parse(fs.readFileSync(settingsFile, { encoding: 'utf8' }));
+settings.queries = readQueryDirectory(queryDir)
+   // Sort by ascending priority and name
+   .sort(function (a, b) {
+      return (a.priority - b.priority) ||
+             (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
+    })
+    // Remove priority numbers in output
+    .map(function (d) { return delete d.priority, d; });
+fs.writeFileSync(outputFile, JSON.stringify(settings));
 
 // Recursively reads queries in the given directory
 function readQueryDirectory(directory) {

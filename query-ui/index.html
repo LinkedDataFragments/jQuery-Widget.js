@@ -7,12 +7,11 @@
   <script src="../deps/jquery-2.1.0.js"></script>
   <script src="../deps/chosen-1.1.0.js"></script>
   <script src="../deps/ldf-client-browser.js"></script>
-  <script src="../deps/prefixes.js"></script>
   <script src="query-ui.js"></script>
   <script src="query-state.js"></script>
   <script>
     jQuery(function ($) {
-      $('.ldf-client').queryui({ querySet: 'queries.json' });
+      $('.ldf-client').queryui({ settings: 'queries.json' });
     });
   </script>
   <link rel=stylesheet href="ldf-client.css">

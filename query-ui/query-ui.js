@@ -48,6 +48,7 @@
     options: {
       availableDatasources: [],
       queries: [],
+      prefixes: [],
     },
 
     // Initializes the widget
@@ -151,13 +152,12 @@
         if (!this.$query.edited && (!this.$query.val() || this.$query.val() !== $queries.val()))
           value[0] && this._setOption('query', value[0].sparql);
         break;
-      // Set datasources and queries
-      case 'querySet':
-        // If the collection is given as a string, fetch through HTTP
-        if (typeof value === 'string')
-          return $.getJSON(value, function (querySet) { self._setOption(key, querySet); });
-        // Load the datasources, which will trigger query loading
-        this._setOption('availableDatasources', value.datasources);
+      // Load settings from a JSON resource
+      case 'settings':
+        $.getJSON(value, function (settings) {
+          for (var key in settings)
+            self._setOption(key, settings[key]);
+        });
         break;
       }
     },
@@ -165,7 +165,7 @@
     // Load queries relevant for the given datasources
     _loadQueries: function (datasources) {
       datasources = toHash(datasources);
-      var queries = (this.options.querySet.queries || []).filter(function (query, index) {
+      var queries = (this.options.queries || []).filter(function (query, index) {
         query.id = index;
         // Include the query if it indicates no datasources,
         // or if it is relevant for at least one datasource
@@ -197,7 +197,7 @@
       $results.empty();
 
       // Create a client to fetch the fragments through HTTP
-      var config = { prefixes: prefixes, logger: this._logger };
+      var config = { prefixes: this.options.prefixes, logger: this._logger };
       config.fragmentsClient = new ldf.FragmentsClient(datasources, config);
 
       // Create the iterator to solve the query
