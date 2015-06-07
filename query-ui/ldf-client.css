@@ -98,7 +98,7 @@ select {
   margin-bottom: -999999px;
 }
 .chosen-choices {
-  max-height: 25px;
+  max-height: 36px;
   transition: max-height .5s;
 }
 
