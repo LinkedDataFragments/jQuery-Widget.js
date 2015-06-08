@@ -111,7 +111,7 @@
       case 'datasources':
         // Choose the first available datasource if none was chosen
         var $options = $datasources.children();
-        if (!(value && value.length) && $options.length)
+        if (initialize && !(value && value.length) && $options.length)
           options[key] = value = [$options.val()];
         // Select chosen datasources that were already in the list
         var selected = toHash(value);
