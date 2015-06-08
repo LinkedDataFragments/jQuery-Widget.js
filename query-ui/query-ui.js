@@ -46,7 +46,7 @@
   $.extend(LdfQueryUI.prototype, {
     // Default widget options
     options: {
-      availableDatasources: [],
+      datasources: [],
       queries: [],
       prefixes: [],
     },
@@ -73,7 +73,7 @@
         skip_no_results: true, search_contains: true, display_selected_options: false,
         placeholder_text: ' ', create_option_text: 'Add datasource',
       });
-      $datasources.change(function () { self._setOption('datasources', $datasources.val()); });
+      $datasources.change(function () { self._setOption('selectedDatasources', $datasources.val()); });
 
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
@@ -107,8 +107,17 @@
       // Apply the chosen option
       var self = this, $datasources = this.$datasources, $queries = this.$queries;
       switch (key) {
-      // Set the datasources to query
+      // Set the datasources available for querying
       case 'datasources':
+        // Create options for each datasource
+        $datasources.empty().append((value || []).map(function (datasource, index) {
+          return $('<option>', { text: datasource.name, value: datasource.url });
+        }));
+        // Restore selected datasources
+        this._setOption('selectedDatasources', options.selectedDatasources, true);
+        break;
+      // Set the datasources to query
+      case 'selectedDatasources':
         // Choose the first available datasource if none was chosen
         var $options = $datasources.children();
         if (initialize && !(value && value.length) && $options.length)
@@ -127,23 +136,18 @@
         // Update the query set
         this._loadQueries(value);
         break;
-      // Set the datasources available for querying
-      case 'availableDatasources':
-        // Create options for each datasource
-        $datasources.empty().append((value || []).map(function (datasource, index) {
-          return $('<option>', { text: datasource.name, value: datasource.url });
-        }));
-        // Restore selected datasources
-        this._setOption('datasources', options.datasources, true);
-        break;
       // Set the query
       case 'query':
         this.$query.val(value).change();
         $queries.children().each(function () { $(this).attr('selected', $(this).val() === value); });
         $queries.trigger('chosen:updated');
         break;
-      // Set the list of queries
+      // Set the list of all possible queries
       case 'queries':
+        this._loadQueries(options.selectedDatasources);
+        break;
+      // Set the list of selectable queries
+      case 'relevantQueries':
         $queries.empty().append($('<option>'), (value || []).map(function (query) {
           return $('<option>', { text: query.name, value: query.sparql,
                                  selected: self.options.query === query.sparql });
@@ -177,7 +181,7 @@
       var querySetId = queries.map(function (q) { return q.id; }).join();
       if (this._querySetId !== querySetId) {
         this._querySetId = querySetId;
-        this._setOption('queries', queries);
+        this._setOption('relevantQueries', queries);
         this.element.trigger('changeQuerySet');
       }
     },

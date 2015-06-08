@@ -1,5 +1,5 @@
 {
-  "availableDatasources": [
+  "datasources": [
     {
       "name": "DBpedia 2014",
       "url": "http://fragments.dbpedia.org/2014/en"

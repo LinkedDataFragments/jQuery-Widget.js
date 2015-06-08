@@ -17,22 +17,23 @@ jQuery(function ($) {
       if (keyvalue) uiState[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
       return uiState;
     }, {});
-    uiState.datasources = uiState.datasources || uiState.startFragment; // backwards compatibility
-    uiState.datasources && $queryui.queryui('option', 'datasources', uiState.datasources.split(/[ ,;]+/));
-    uiState.query && $queryui.queryui('option', 'query', uiState.query);
+    if (uiState.datasources = uiState.datasources || uiState.startFragment) // backwards compatibility
+      $queryui.queryui('option', 'selectedDatasources', uiState.datasources.split(/[ ,;]+/));
+    if (uiState.query)
+      $queryui.queryui('option', 'query', uiState.query);
   }
 
   // Stores the current UI state in the URL
   function saveStateToUrl() {
     var url = location.href.replace(/#.*/, ''),
         options = $queryui.queryui('option'),
-        datasources = options.datasources || [],
-        defaultDatasource = (options.availableDatasources[0] || {}).url,
+        datasources = options.selectedDatasources || [],
+        defaultDatasource = (options.datasources[0] || {}).url,
         hasDefaultQuery = options.query === (options.queries[0] || {}).sparql,
         hasDefaultDatasource = datasources.length === 0 ||
                                (datasources.length === 1 && datasources[0] === defaultDatasource);
     if (!hasDefaultDatasource || !hasDefaultQuery)
-      url += '#datasources=' + (options.datasources || []).map(encodeURIComponent).join(';') +
+      url += '#datasources=' + datasources.map(encodeURIComponent).join(';') +
              (hasDefaultQuery ? '' : '&query=' + encodeURIComponent(options.query || ''));
     history.replaceState && history.replaceState(null, null, url);
   }
