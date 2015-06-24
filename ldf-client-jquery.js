@@ -1,5 +1,5 @@
 /*! @license ©2015 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
-// jQuery widget for triple pattern fragments query execution
+// jQuery widget for Triple Pattern Fragments query execution
 
 (function ($) {
   // Query UI main entry point, which mimics the jQuery UI widget interface:

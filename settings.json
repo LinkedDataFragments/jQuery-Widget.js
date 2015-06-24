@@ -34,5 +34,5 @@
     "dbpprop":     "http://dbpedia.org/property/",
     "schema":      "http://schema.org/"
   },
-  "queries": "(Will be generated from the 'queries' folder by running the './build-queries' script.)"
+  "queries": "(Will be generated from the 'queries' folder by running the './queries-to-json' script.)"
 }

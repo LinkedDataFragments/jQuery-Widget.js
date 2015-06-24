@@ -1,5 +1,5 @@
 /*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
-/** Initializes the LDF client and its fragment and query picker. */
+/** Loads and stores state of the Triple Pattern Fragments widget using the URL. */
 
 jQuery(function ($) {
   var $queryui = $('.ldf-client').one('changeQuerySet', function () {

@@ -20,8 +20,8 @@ html = html.replace(/\s*<script src="([^"]+)"><\/script>\s*/g, function (match, 
 });
 if (scriptFiles.length) {
   minifiedScript = UglifyJS.minify(scriptFiles, { output: { comments: /^!/ } });
-  fs.writeFileSync(path.join(scriptsDir, 'ldf-query-ui.js'), minifiedScript.code);
-  html = html.replace('</body>', '<script src="scripts/ldf-query-ui.js"></script>\n</body>');
+  fs.writeFileSync(path.join(scriptsDir, 'ldf-client-jquery-packaged.js'), minifiedScript.code);
+  html = html.replace('</body>', '<script src="scripts/ldf-client-jquery-packaged.js"></script>\n</body>');
 }
 
 // Bundle all inline scripts into a single script
@@ -42,6 +42,7 @@ copy(path.join(sourceDir, 'queries.json'), path.join(outputDir, 'queries.json'))
 fs.readdirSync(path.join(sourceDir, 'images')).forEach(function (image) {
   copy(path.join(sourceDir, 'images', image), path.join(imagesDir, image));
 });
+copy(path.join(sourceDir, 'favicon.ico'), path.join(outputDir, 'favicon.ico'));
 
 // Write the output HTML
 fs.writeFileSync(path.join(outputDir, 'index.html'), html);
