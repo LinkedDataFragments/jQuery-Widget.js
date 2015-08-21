@@ -1,5 +1,6 @@
 # People who have something in common with Jesus
 # Datasource: http://fragments.dbpedia.org/2014/en
+# Datasource: http://fragments.dbpedia.org/2015/en
 SELECT DISTINCT ?person
 WHERE {
   dbpedia:Jesus dc:subject ?common.

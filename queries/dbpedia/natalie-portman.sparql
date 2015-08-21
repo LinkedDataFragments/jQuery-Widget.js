@@ -1,5 +1,6 @@
 # Foreign titles of Natalie Portman movies
 # Datasource: http://fragments.dbpedia.org/2014/en
+# Datasource: http://fragments.dbpedia.org/2015/en
 SELECT ?titleEng ?title
 WHERE {
     ?movie dbpprop:starring [ rdfs:label "Natalie Portman"@en ];

@@ -1,5 +1,6 @@
 # Death causes of male American actors
 # Datasource: http://fragments.dbpedia.org/2014/en
+# Datasource: http://fragments.dbpedia.org/2015/en
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 SELECT ?actor ?cause
 WHERE {

@@ -1,6 +1,10 @@
 {
   "datasources": [
     {
+      "name": "DBpedia 2015",
+      "url": "http://fragments.dbpedia.org/2015/en"
+    },
+    {
       "name": "DBpedia 2014",
       "url": "http://fragments.dbpedia.org/2014/en"
     },

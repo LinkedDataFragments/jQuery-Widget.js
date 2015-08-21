@@ -1,5 +1,6 @@
 # Bands Michael Jackson wrote a song for
 # Datasource: http://fragments.dbpedia.org/2014/en
+# Datasource: http://fragments.dbpedia.org/2015/en
 SELECT DISTINCT ?performer ?name WHERE {
   ?work dbpedia-owl:writer dbpedia:Michael_Jackson;
         dbpedia-owl:musicalArtist ?performer.
