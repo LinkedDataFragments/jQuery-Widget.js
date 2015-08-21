@@ -1,7 +1,0 @@
-# Possible juridical forms of Belgian enterprises
-# Datasource: http://data.kbodata.be/fragments
-SELECT * WHERE {
-    ?juridicalForm skos:inScheme <http://data.kbodata.be/conceptscheme/juridicalform#id>.
-    ?juridicalForm skos:prefLabel ?label.
-    FILTER LANGMATCHES(LANG(?label), "FR")
-}
