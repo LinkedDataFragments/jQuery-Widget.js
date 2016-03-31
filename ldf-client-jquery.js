@@ -139,8 +139,6 @@
       // Set the query
       case 'query':
         this.$query.val(value).change();
-        $queries.children().each(function () { $(this).attr('selected', $(this).val() === value); });
-        $queries.trigger('chosen:updated');
         break;
       // Set the list of all possible queries
       case 'queries':
@@ -148,13 +146,15 @@
         break;
       // Set the list of selectable queries
       case 'relevantQueries':
-        $queries.empty().append($('<option>'), (value || []).map(function (query) {
-          return $('<option>', { text: query.name, value: query.sparql,
-                                 selected: self.options.query === query.sparql });
-        })).trigger('chosen:updated').change();
-        // Load the first query if the current query was not edited and not in the list
-        if (!this.$query.edited && (!this.$query.val() || this.$query.val() !== $queries.val()))
+        value = value || [];
+        // Load the first selectable query if the current query was not edited and not in the list
+        if (!this.$query.edited && !value.some(function (v) { return v.sparql === options.query; }))
           value[0] && this._setOption('query', value[0].sparql);
+        // Update the selectable query list
+        $queries.empty().append($('<option>'), value.map(function (query) {
+          return $('<option>', { text: query.name, value: query.sparql,
+                                 selected: options.query === query.sparql });
+        })).trigger('chosen:updated').change();
         break;
       // Load settings from a JSON resource
       case 'settings':
