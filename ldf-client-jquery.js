@@ -65,7 +65,7 @@
           $datasources = this.$datasources = $('.datasources', $element);
 
       // Replace non-existing elements by an empty text box
-      if (!$datasources.length) $datasources = this.$datasources = $('<input>');
+      if (!$datasources.length) $datasources = this.$datasources = $('<select>');
 
       // When a datasource is selected, load the corresponding query set
       $datasources.chosen({
