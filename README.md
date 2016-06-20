@@ -23,6 +23,22 @@ This script is compiled with its dependencies to `deps/ldf-client-browser.js` vi
 
 You can use the resulting `ldf-client-browser.js` in your browser applications; it is independent of the jQuery UI widget.
 
+### _(Optional)_ Running in a Docker container
+
+If you want to rapidly deploy this widget as a microservice, you can build a [Docker](https://www.docker.com/) container as follows:
+
+```bash
+$ docker build -t ldf-client-widget .
+```
+
+Next, configure your widget by creating a `settings.json` file in your working directory based on the [example](https://github.com/LinkedDataFragments/jQuery-Widget.js/blob/master/settings.json).
+Next, create a `queries` directory in which you should insert the queries that will be present by default in the widget, as is done [here](https://github.com/LinkedDataFragments/jQuery-Widget.js/tree/master/queries).
+
+After that, you can run your newly created container in which `settings.json` and `queries` is mounted to the Docker container:
+```bash
+$ docker run -p 8080:8080 -it --rm -v $(pwd)/settings.json:/tmp/settings.json -v $(pwd)/queries:/tmp/queries ldf-client-widget
+```
+
 ## License
 The Linked Data Fragments jQuery Widget is written by [Ruben Verborgh](http://ruben.verborgh.org/).
 
