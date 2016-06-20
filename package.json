@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "postinstall": "browserify node_modules/ldf-client/browser.js -u stream -o deps/ldf-client-browser.js\n./queries-to-json"
+    "postinstall": "browserify node_modules/ldf-client/browser.js -u stream -o deps/ldf-client-browser.js\n./queries-to-json",
+    "production": "./queries-to-json\n./build-minified"
   },
   "dependencies": {
     "ldf-client": "~1.3.1",
