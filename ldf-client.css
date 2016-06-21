@@ -84,11 +84,6 @@ li {
   margin: .5em 0;
 }
 
-.ui-combobox {
-  float: right;
-  min-width: 390px;
-}
-
 select {
   min-width: 390px;
 }
@@ -100,6 +95,13 @@ select {
 .chosen-choices {
   max-height: 36px;
   transition: max-height .5s;
+}
+
+input.datetime {
+  float: right;
+  font-size: 13px;
+  border: 1px solid #999999;
+  border-radius: 3px;
 }
 
 textarea {

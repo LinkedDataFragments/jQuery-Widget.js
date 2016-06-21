@@ -62,7 +62,8 @@
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
           $results = this.$results = $('.results', $element),
-          $datasources = this.$datasources = $('.datasources', $element);
+          $datasources = this.$datasources = $('.datasources', $element),
+          $datetime = this.$datetime = $('.datetime', $element);
 
       // Replace non-existing elements by an empty text box
       if (!$datasources.length) $datasources = this.$datasources = $('<select>');
@@ -201,7 +202,11 @@
       $results.empty();
 
       // Create a client to fetch the fragments through HTTP
-      var config = { prefixes: this.options.prefixes, logger: this._logger };
+      var config = {
+        logger: this._logger,
+        prefixes: this.options.prefixes,
+        datetime: parseDate(this.$datetime.val()),
+      };
       config.fragmentsClient = new ldf.FragmentsClient(datasources, config);
 
       // Create the iterator to solve the query
@@ -274,5 +279,13 @@
     for (var i = 0; i < length; i++)
       hash[array[i]] = false;
     return hash;
+  }
+
+  // Parses a yyyy-mm-dd date string into a Date
+  function parseDate(date) {
+    if (date) {
+      try { return new Date(Date.parse(date)); }
+      catch (e) { }
+    }
   }
 })(jQuery);
