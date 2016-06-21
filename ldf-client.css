@@ -39,10 +39,10 @@ button {
   font-weight: bold;
   color: black;
   background-color: #f6f6f6;
+  border: 1px solid #999999;
   border-radius: 3px;
   margin: 0;
   padding: 5px 8px;
-  border: 1px solid #999999;
   cursor: pointer;
 }
 input {
@@ -374,13 +374,17 @@ li.search-field input[type="text"] {
 }
 li.search-choice {
   position: relative;
-  margin: 2px 5px 2px 0;
+  margin: 1px 5px 1px 0;
   padding: 3px 20px 3px 5px;
   max-width: 100%;
   border-radius: 3px;
   background-color: #f6f6f6;
+  border: 1px solid #cacaca;
   line-height: 13px;
   cursor: default;
+}
+li.search-choice:hover {
+  background-color: #ececec;
 }
 li.search-choice span {
   word-wrap: break-word;
