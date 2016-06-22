@@ -22,6 +22,8 @@ jQuery(function ($) {
       $queryui.queryui('option', 'selectedDatasources', uiState.datasources.split(/[ ,;]+/));
     if (uiState.query)
       $queryui.queryui('option', 'query', uiState.query);
+    if (uiState.datetime)
+      $queryui.queryui('option', 'datetime', uiState.datetime);
   }
 
   // Stores the current UI state in the URL
@@ -38,6 +40,8 @@ jQuery(function ($) {
       queryString.push('datasources=' + datasources.map(encodeURIComponent).join(';'));
     if (!hasDefaultQuery)
       queryString.push('query=' + encodeURIComponent(options.query || ''));
+    if (options.datetime)
+      queryString.push('datetime=' + encodeURIComponent(options.datetime));
 
     // Compose new URL with query string
     queryString = queryString.length ? '#' + queryString.join('&') : '';

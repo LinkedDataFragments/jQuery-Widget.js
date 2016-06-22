@@ -85,6 +85,9 @@
           $query.val(options.query = query).edited = false;
       });
 
+      // Update datetime on change
+      $datetime.change(function () { self._setOption('datetime', $datetime.val()); });
+
       // Set up starting and stopping
       $start.click(this._execute.bind(this));
       $stop.click(this._stopExecution.bind(this));
@@ -144,6 +147,9 @@
       // Set the list of all possible queries
       case 'queries':
         this._loadQueries(options.selectedDatasources);
+        break;
+      case 'datetime':
+        this.$datetime.val(value).change();
         break;
       // Set the list of selectable queries
       case 'relevantQueries':
@@ -205,7 +211,7 @@
       var config = {
         logger: this._logger,
         prefixes: this.options.prefixes,
-        datetime: parseDate(this.$datetime.val()),
+        datetime: parseDate(this.options.datetime),
       };
       config.fragmentsClient = new ldf.FragmentsClient(datasources, config);
 
