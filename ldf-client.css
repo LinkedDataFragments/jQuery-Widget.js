@@ -23,7 +23,7 @@ body {
 a, button, label {
   font-weight: bold;
 }
-a, button, button:hover, input:hover, label {
+a, button, input:hover, label {
   color: #be1622;
   cursor: pointer;
   text-decoration: none;
@@ -44,6 +44,12 @@ button {
   margin: 0;
   padding: 5px 8px;
   cursor: pointer;
+}
+button:hover {
+  background-color: #ececec;
+}
+button:active {
+  margin: 1px -1px -1px 1px;
 }
 input {
   padding: 1px 5px;
