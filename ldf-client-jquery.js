@@ -63,7 +63,9 @@
           $queries = this.$queries = $('.query', $element),
           $results = this.$results = $('.results', $element),
           $datasources = this.$datasources = $('.datasources', $element),
-          $datetime = this.$datetime = $('.datetime', $element);
+          $datetime = this.$datetime = $('.datetime', $element),
+          $details = this.$details = $('.details', $element),
+          $showDetails = this.$showDetails = $('.details-toggle', $element);
 
       // Replace non-existing elements by an empty text box
       if (!$datasources.length) $datasources = this.$datasources = $('<select>');
@@ -91,6 +93,11 @@
       // Set up starting and stopping
       $start.click(this._execute.bind(this));
       $stop.click(this._stopExecution.bind(this));
+
+      // Set up details toggling
+      $showDetails.click(function () {
+        $details.is(':visible') ? self._hideDetails() : self._showDetails();
+      });
 
       // Add log lines to the log element
       var logger = this._logger = new ldf.Logger();
@@ -149,6 +156,8 @@
         this._loadQueries(options.selectedDatasources);
         break;
       case 'datetime':
+        if (value)
+          this._showDetails();
         this.$datetime.val(value).change();
         break;
       // Set the list of selectable queries
@@ -263,6 +272,19 @@
       this._resultsIterator && this._resultsIterator.removeAllListeners();
       ldf.HttpClient.abortAll && ldf.HttpClient.abortAll();
       error && error.message && this.$results.text(error.message);
+    },
+
+    // Shows the details panel
+    _showDetails: function () {
+      this.$details.slideDown(150);
+      this.$showDetails.addClass('enabled');
+    },
+
+    // Hides the details panel
+    _hideDetails: function () {
+      this._setOption('datetime', '');
+      this.$details.slideUp(150);
+      this.$showDetails.removeClass('enabled');
     },
   });
 
