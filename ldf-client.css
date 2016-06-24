@@ -4,7 +4,7 @@ html {
   font-size: 11pt;
   background: #f6f6f6;
 }
-html, input, textarea, button {
+html, input, textarea, button, pre {
   font: 1em/1.4 'Open Sans', Verdana, Arial, sans-serif;
   -webkit-text-size-adjust: none;
 }
@@ -145,20 +145,58 @@ textarea {
   background-color: transparent;
 }
 
-pre {
+.results {
   width: 100%;
-  height: 25em;
-  font-size: 9pt;
+  height: 23.5em;
+  font-size: 10pt;
   overflow: scroll;
-  margin: .5em -999999px 1em 0;
+  margin: .5em 0 1em;
 }
-pre a {
+.results a {
   font-weight: normal;
+  color: inherit;
+}
+.result {
+  font-weight: normal;
+  border: 1px solid #be1622;
+  margin: 0 0 1em;
+  border-radius: 5px;
+}
+.result:hover {
+  color: white;
+  background-color: #be1622;
+}
+.result:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.result p {
+  margin: 0;
+}
+.result var {
+  background-color: #be1622;
+  color: white;
+  font-style: normal;
+  font-weight: bold;
+  padding: 0 .5em 1px;
+  margin-right: .5em;
+}
+.result p:last-child var {
+  border-radius: 0 0 0 5px;
 }
 
 .log {
   color: #666;
-  height: 6.5em;
+  height: 6.3em;
+  width: 100%;
+  font-size: 9pt;
+  line-height: 1.6;
+  overflow: scroll;
+  margin: .5em -999999px 1em 0;
+}
+.log a {
+  font-weight: normal;
 }
 
 footer {
@@ -193,7 +231,7 @@ footer {
     margin: 0 -10px -8px 10px;
   }
 
-  pre {
+  .log {
     max-width: 90%;
   }
 }

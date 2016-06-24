@@ -239,12 +239,15 @@
           var resultCount = 0;
           resultsIterator.on('data', function (row) {
             resultCount++;
-            var lines = [];
-            $.each(row, function (k, v) { if (v !== undefined) lines.push(k + ': ' + v); });
-            appendText($results, lines.join('\n'), '\n\n');
+            $results.append($('<div>', { 'class': 'result' })
+              .append($.map(row, function (value, variable) {
+                return $('<p>').append($('<var>',  { text: variable }), ' ',
+                                       $('<span>', { html: escape(value) }));
+              })));
           });
           resultsIterator.on('end', function () {
-            resultCount || appendText($results, '(This query has no results.)');
+            if (!resultCount)
+              $results.append($('<em>').text('This query has no results.'));
           });
           break;
         // For CONSTRUCT and DESCRIBE queries, write a Turtle representation of all results
@@ -258,10 +261,13 @@
           break;
         // For ASK queries, write whether an answer exists
         case 'ASK':
-          resultsIterator.on('data', function (exists) { appendText($results, exists); });
+          resultsIterator.on('data', function (exists) {
+            $results.append($('<em>').text(exists));
+          });
           break;
         default:
-          appendText($log, 'Unsupported query type: ' + resultsIterator.queryType);
+          $results.append($('<em>')
+                  .text(resultsIterator.queryType + ' queries are unsupported.'));
       }
     },
 
@@ -291,12 +297,15 @@
   // Appends text to the given element
   function appendText($element) {
     for (var i = 1, l = arguments.length; i < l; i++)
-      $element.append((arguments[i] + '').replace(/(<)|(>)|(&)|(https?:\/\/[^\s<>]+)/g, escape));
+      $element.append(escape(arguments[i]).replace(/\n/g, '<br>'));
     $element.scrollTop(1E10);
   }
 
   // Escapes special HTML characters and convert URLs into links
-  function escape(match, lt, gt, amp, url) {
+  function escape(text) {
+    return (text + '').replace(/(<)|(>)|(&)|(https?:\/\/[^\s<>]+)/g, escapeMatch);
+  }
+  function escapeMatch(match, lt, gt, amp, url) {
     return lt && '&lt;' || gt && '&gt;' || amp && '&amp;' ||
            $('<a>', { href: url, target: '_blank', text: url })[0].outerHTML;
   }
