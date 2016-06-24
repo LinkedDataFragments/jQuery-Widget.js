@@ -126,15 +126,18 @@ input.datetime {
 }
 
 textarea {
-  width: 100%;
+  box-sizing: border-box;
   min-height: 11em;
+  width: 100%;
+  padding-left: 1em;
   border: none;
   cursor: pointer;
   font-size: .95em;
   background-color: transparent;
+  color: #777777;
 }
-textarea:hover {
-  color: #be1622;
+textarea:hover, textarea:focus {
+  color: inherit;
 }
 
 pre {
