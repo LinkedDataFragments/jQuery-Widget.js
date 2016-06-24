@@ -32,9 +32,7 @@ a:hover {
   color: #be1622;
   text-decoration: underline;
 }
-header a {
-  color: inherit;
-}
+
 button {
   font-weight: bold;
   color: black;
@@ -60,23 +58,28 @@ label:after {
 }
 
 header h1 {
-  margin: .3em 0 0;
+  margin: .3em 0 .1em;
+  font-size: 1.95em;
 }
 header p {
   font-weight: bold;
-  margin: 0 0 2em;
+  margin: 0 0 1.5em;
+}
+header a {
+  color: inherit;
 }
 header .logo {
   float: right;
 }
 header img {
-  width: 160px;
-  border: none;
+  margin: -9px -11px 0 0;
+  height: 81px;
 }
 
 fieldset {
   border: none;
   padding: 0;
+  margin: 0;
 }
 .ldf-client, .ldf-client * {
   max-width: 100%;
@@ -160,19 +163,18 @@ pre a {
 
 footer {
   font-size: .8em;
-  margin-top: 2em;
 }
 
 @media (max-width: 725px) {
   body {
-    padding: 1em;
+    padding: .1em 1em;
     font-size: 10pt;
   }
   h1 {
     font-size: 1.4em;
   }
-  .logo {
-    margin: -1em -.5em 0 0;
+  header img {
+    height: 70px;
   }
   header p {
     margin: 0 0 .5em;
@@ -196,7 +198,7 @@ footer {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .logo {
     display: none;
   }
