@@ -140,10 +140,6 @@ textarea {
   cursor: pointer;
   font-size: .95em;
   background-color: transparent;
-  color: #777777;
-}
-textarea:hover, textarea:focus {
-  color: inherit;
 }
 
 pre {
