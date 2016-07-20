@@ -222,7 +222,8 @@
         prefixes: this.options.prefixes,
         datetime: parseDate(this.options.datetime),
       };
-      config.fragmentsClient = new ldf.FragmentsClient(datasources, config);
+      this.fragmentsClient = config.fragmentsClient
+                           = new ldf.FragmentsClient(datasources, config);
 
       // Create the iterator to solve the query
       var resultsIterator;
@@ -276,7 +277,10 @@
       this.$stop.hide();
       this.$start.show();
       this._resultsIterator && this._resultsIterator.removeAllListeners();
-      ldf.HttpClient.abortAll && ldf.HttpClient.abortAll();
+      if (this.fragmentsClient.abortAll)
+        this.fragmentsClient.abortAll();
+      else if (ldf.HttpClient.abortAll)
+        ldf.HttpClient.abortAll();
       error && error.message && this.$results.text(error.message);
     },
 
