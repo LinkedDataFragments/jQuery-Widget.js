@@ -151,6 +151,7 @@ textarea {
   font-size: 10pt;
   overflow: scroll;
   margin: .5em 0 1em;
+  white-space: pre-wrap;
 }
 .results a {
   font-weight: normal;
