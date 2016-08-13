@@ -56,13 +56,13 @@
       var self = this,
           options = this.options,
           $element = this.element,
-          $log = $('.log', $element),
           $stop = this.$stop = $('.stop', $element),
           $start = this.$start = $('.start', $element),
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
+          $log = $('.log', $element),
           $results = $('.results', $element),
-          $resultsText = this.$resultsText = $('<div>', { class: 'text' }),
+          $resultsText = $('<div>', { class: 'text' }),
           $datasources = this.$datasources = $('.datasources', $element),
           $datetime = this.$datetime = $('.datetime', $element),
           $details = this.$details = $('.details', $element),
@@ -105,13 +105,14 @@
       // Set up results
       $results.append($resultsText);
       this._resultsScroller = new FastScroller($results, renderResult);
+      this._writeResult = appenderFor($resultsText);
 
       // Set up logging
       var logger = this._logger = new ldf.Logger(),
-          logScroller = this._logScroller = new FastScroller($log, renderLogLine);
+          writeLog = this._writeLog = appenderFor($log);
       ldf.Logger.setLevel('info');
       logger._print = function (items) {
-        logScroller.addContent([items.slice(2).join(' ').trim() + '\n']);
+        writeLog(items.slice(2).join(' ').trim() + '\n');
       };
 
       // Apply all options
@@ -218,15 +219,17 @@
       if (!datasources || !datasources.length)
         return alert('Please choose a datasource to execute the query.');
 
-      // Clear results and log, and scroll page to the results
-      var $resultsText = this.$resultsText,
-          resultsScroller = this._resultsScroller, logScroller = this._logScroller;
-      $('html,body').animate({ scrollTop: this.$start.offset().top });
+      // Clear results and log
+      var resultsScroller = this._resultsScroller,
+          writeResult = this._writeResult, writeLog = this._writeLog;
       this.$stop.show();
       this.$start.hide();
-      $resultsText.empty();
       resultsScroller.removeAll();
-      logScroller.removeAll();
+      writeResult.clear();
+      writeLog.clear();
+
+      // Scroll page to the results
+      $('html,body').animate({ scrollTop: this.$start.offset().top });
 
       // Create a client to fetch the fragments through HTTP
       var config = {
@@ -256,27 +259,25 @@
           });
           resultsIterator.on('end', function () {
             if (!resultCount)
-              $resultsText.append($('<em>', { text: 'This query has no results.' }));
+              writeResult('This query has no results.');
           });
           break;
         // For CONSTRUCT and DESCRIBE queries, write a Turtle representation of all results
         case 'CONSTRUCT':
         case 'DESCRIBE':
           var writer = new N3.Writer({ write: function (chunk, encoding, done) {
-            appendText($resultsText, chunk), done && done();
+            writeResult(chunk);
+            done && done();
           }}, config);
           resultsIterator.on('data', function (triple) { writer.addTriple(triple); })
                          .on('end',  function () { writer.end(); });
           break;
         // For ASK queries, write whether an answer exists
         case 'ASK':
-          resultsIterator.on('data', function (exists) {
-            $resultsText.append($('<em>', { text: exists }));
-          });
+          resultsIterator.on('data', function (exists) { writeResult(exists); });
           break;
         default:
-          $resultsText.append($('<em>',
-            { text: resultsIterator.queryType + ' queries are unsupported.' }));
+          writeResult(resultsIterator.queryType + ' queries are unsupported.');
       }
     },
 
@@ -289,7 +290,9 @@
         this.fragmentsClient.abortAll();
       else if (ldf.HttpClient.abortAll)
         ldf.HttpClient.abortAll();
-      error && error.message && this.$resultsText.text(error.message);
+      error && error.message && this._writeResult(error.message);
+      this._writeResult.flush();
+      this._writeLog.flush();
     },
 
     // Shows the details panel
@@ -306,20 +309,59 @@
     },
   });
 
-  // Appends text to the given element
-  function appendText($element) {
-    for (var i = 1, l = arguments.length; i < l; i++)
-      $element.append(escape(arguments[i]).replace(/\n/g, '<br>'));
-    $element.scrollTop(1E10);
+  // Creates a function that appends text to the given element in a throttled way
+  function appenderFor($element) {
+    var buffer, allowedAppends, timeout, delay = 1000;
+    // Resets the element
+    function clear() {
+      buffer = '';
+      $element.empty();
+      allowedAppends = 50;
+      clearTimeout(timeout);
+    }
+    clear();
+    // Appends the text to the element, or queues it for appending
+    function append(text) {
+      // Append directly if still allowed
+      if (allowedAppends > 0) {
+        $element.append(escape(text));
+        // When no longer allowed, re-enable appending after a delay
+        if (--allowedAppends === 0)
+          timeout = setTimeout(flush, delay);
+      }
+      // Otherwise, queue for appending
+      else
+        buffer += text;
+    }
+    // Writes buffered text and re-enables appending
+    function flush() {
+      // Clear timeout in case flush was explicitly triggered
+      clearTimeout(timeout);
+      timeout = null;
+      // Re-enable appending right away if no text was queued
+      if (!buffer)
+        allowedAppends = 1;
+      // Otherwise, append queued text and wait to re-enable
+      else {
+        $element.append(escape(buffer));
+        buffer = '';
+        timeout = setTimeout(flush, delay);
+      }
+    }
+    // Export the append function
+    append.clear = clear;
+    append.flush = flush;
+    return append;
   }
 
   // Escapes special HTML characters and convert URLs into links
   function escape(text) {
-    return (text + '').replace(/(<)|(>)|(&)|(https?:\/\/[^\s<>]+)/g, escapeMatch);
+    return (text + '').replace(/(<)|(>)|(&)|http(s?:\/\/[^\s<>]+)/g, escapeMatch);
   }
   function escapeMatch(match, lt, gt, amp, url) {
     return lt && '&lt;' || gt && '&gt;' || amp && '&amp;' ||
-           $('<a>', { href: url, target: '_blank', text: url })[0].outerHTML;
+           (url = 'http' + escape(url)) &&
+           '<a href="' + url + '" target=_blank>' + url + '</a>';
   }
 
   // Converts the array to a hash with the elements as keys
