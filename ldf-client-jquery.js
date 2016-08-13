@@ -56,12 +56,13 @@
       var self = this,
           options = this.options,
           $element = this.element,
-          $log = this.$log = $('.log', $element),
+          $log = $('.log', $element),
           $stop = this.$stop = $('.stop', $element),
           $start = this.$start = $('.start', $element),
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
-          $results = this.$results = $('.results', $element),
+          $results = $('.results', $element),
+          $resultsText = this.$resultsText = $('<div>', { class: 'text' }),
           $datasources = this.$datasources = $('.datasources', $element),
           $datetime = this.$datetime = $('.datetime', $element),
           $details = this.$details = $('.details', $element),
@@ -69,6 +70,8 @@
 
       // Replace non-existing elements by an empty text box
       if (!$datasources.length) $datasources = this.$datasources = $('<select>');
+      if (!$results.length) $results = $('<div>');
+      if (!$log.length) $log = $('<div>');
 
       // When a datasource is selected, load the corresponding query set
       $datasources.chosen({
@@ -99,10 +102,17 @@
         $details.is(':visible') ? self._hideDetails() : self._showDetails();
       });
 
-      // Add log lines to the log element
-      var logger = this._logger = new ldf.Logger();
+      // Set up results
+      $results.append($resultsText);
+      this._resultsScroller = new FastScroller($results, renderResult);
+
+      // Set up logging
+      var logger = this._logger = new ldf.Logger(),
+          logScroller = this._logScroller = new FastScroller($log, renderLogLine);
       ldf.Logger.setLevel('info');
-      logger._print = function (items) { appendText($log, items.slice(2).join(' ').trim() + '\n'); };
+      logger._print = function (items) {
+        logScroller.addContent([items.slice(2).join(' ').trim() + '\n']);
+      };
 
       // Apply all options
       for (var key in options)
@@ -209,12 +219,14 @@
         return alert('Please choose a datasource to execute the query.');
 
       // Clear results and log, and scroll page to the results
-      var $results = this.$results, $log = this.$log;
+      var $resultsText = this.$resultsText,
+          resultsScroller = this._resultsScroller, logScroller = this._logScroller;
       $('html,body').animate({ scrollTop: this.$start.offset().top });
       this.$stop.show();
       this.$start.hide();
-      $log.empty();
-      $results.empty();
+      $resultsText.empty();
+      resultsScroller.removeAll();
+      logScroller.removeAll();
 
       // Create a client to fetch the fragments through HTTP
       var config = {
@@ -240,22 +252,18 @@
           var resultCount = 0;
           resultsIterator.on('data', function (row) {
             resultCount++;
-            $results.append($('<div>', { 'class': 'result' })
-              .append($.map(row, function (value, variable) {
-                return $('<p>').append($('<var>',  { text: variable }), ' ',
-                                       $('<span>', { html: escape(value) }));
-              })));
+            resultsScroller.addContent([lastRow = row]);
           });
           resultsIterator.on('end', function () {
             if (!resultCount)
-              $results.append($('<em>').text('This query has no results.'));
+              $resultsText.append($('<em>', { text: 'This query has no results.' }));
           });
           break;
         // For CONSTRUCT and DESCRIBE queries, write a Turtle representation of all results
         case 'CONSTRUCT':
         case 'DESCRIBE':
           var writer = new N3.Writer({ write: function (chunk, encoding, done) {
-            appendText($results, chunk), done && done();
+            appendText($resultsText, chunk), done && done();
           }}, config);
           resultsIterator.on('data', function (triple) { writer.addTriple(triple); })
                          .on('end',  function () { writer.end(); });
@@ -263,12 +271,12 @@
         // For ASK queries, write whether an answer exists
         case 'ASK':
           resultsIterator.on('data', function (exists) {
-            $results.append($('<em>').text(exists));
+            $resultsText.append($('<em>', { text: exists }));
           });
           break;
         default:
-          $results.append($('<em>')
-                  .text(resultsIterator.queryType + ' queries are unsupported.'));
+          $resultsText.append($('<em>',
+            { text: resultsIterator.queryType + ' queries are unsupported.' }));
       }
     },
 
@@ -281,7 +289,7 @@
         this.fragmentsClient.abortAll();
       else if (ldf.HttpClient.abortAll)
         ldf.HttpClient.abortAll();
-      error && error.message && this.$results.text(error.message);
+      error && error.message && this.$resultsText.text(error.message);
     },
 
     // Shows the details panel
@@ -329,4 +337,20 @@
       catch (e) { }
     }
   }
+
+  // Transforms a result row into an HTML element
+  function renderResult(row, container) {
+    container = container || $('<div>', { 'class': 'result' }).append($('<dl>'))[0];
+    $(container.firstChild).empty().append($.map(row, function (value, variable) {
+      return [$('<dt>', { text: variable }), $('<dd>', { html: escape(value) })];
+    }));
+    return container;
+  };
+
+  // Transforms a log line into an HTML element
+  function renderLogLine(text, element) {
+    element = element || $('<p>')[0];
+    element.innerHTML = escape(text);
+    return element;
+  };
 })(jQuery);

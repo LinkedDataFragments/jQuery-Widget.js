@@ -151,58 +151,72 @@ textarea {
 }
 
 .results {
-  width: 100%;
   height: 23.5em;
   font-size: 10pt;
-  overflow: scroll;
   margin: .5em 0 1em;
-  white-space: pre-wrap;
 }
 .results a {
   font-weight: normal;
   color: inherit;
 }
 .result {
-  font-weight: normal;
+  width: calc(100% - 2px);
+}
+.result dl {
   border: 1px solid #be1622;
   margin: 0 0 1em;
   border-radius: 5px;
 }
-.result:hover {
+.result dl:hover {
   color: white;
   background-color: #be1622;
 }
-.result:after {
+.result dl:after {
   content: "";
   display: table;
   clear: both;
 }
-.result p {
-  margin: 0;
-}
-.result var {
+.result dt {
+  float: left;
+  clear: left;
   background-color: #be1622;
   color: white;
   font-style: normal;
   font-weight: bold;
-  padding: 0 .5em 1px;
-  margin-right: .5em;
+  padding: 0 .5em;
+  margin: 0 .5em 0 0;
 }
-.result p:last-child var {
+.result dd {
+  margin: 0 .5em 0 1em;
+}
+.result dt:last-of-type {
   border-radius: 0 0 0 5px;
+}
+.results .text {
+  white-space: pre-wrap;
+  margin-right: -999999px; /* avoid that long URLs alter body width */
 }
 
 .log {
   color: #666;
   height: 6.3em;
-  width: 100%;
   font-size: 9pt;
   line-height: 1.6;
-  overflow: scroll;
   margin: .5em -999999px 1em 0;
+}
+.log p {
+  margin: 0;
 }
 .log a {
   font-weight: normal;
+}
+
+.results, .log {
+  width: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+  contain: layout;
 }
 
 footer {
