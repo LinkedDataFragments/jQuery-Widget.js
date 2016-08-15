@@ -104,7 +104,7 @@ fieldset > ul > li:after {
 }
 
 select {
-  min-width: 430px;
+  width: 430px;
 }
 
 .chosen {
@@ -225,7 +225,7 @@ footer {
   }
 
   select {
-    min-width: 350px;
+    width: 350px;
   }
   .chosen, input.datetime {
     float: none;
@@ -242,8 +242,17 @@ footer {
 }
 
 @media (max-width: 550px) {
-  .logo {
+  h1 {
+    ine-height: 1.2;
+  }
+  header p, .logo {
     display: none;
+  }
+  label {
+    display: block;
+  }
+  select {
+    width: 250px;
   }
 }
 
