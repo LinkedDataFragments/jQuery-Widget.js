@@ -51,7 +51,7 @@ button:active {
 }
 input {
   padding: 1px 5px;
-  font-size: .9em;
+  font-size: 10pt;
 }
 label:after {
   content: ":";
@@ -105,6 +105,12 @@ fieldset > ul > li:after {
 
 select {
   width: 430px;
+}
+
+.timing {
+  float: right;
+  font-size: 10pt;
+  padding: .7em 0;
 }
 
 .chosen {

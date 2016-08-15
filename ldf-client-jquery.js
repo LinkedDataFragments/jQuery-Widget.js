@@ -58,6 +58,7 @@
           $element = this.element,
           $stop = this.$stop = $('.stop', $element),
           $start = this.$start = $('.start', $element),
+          $timing = this.$timing = $('.timing', $element),
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
           $log = $('.log', $element),
@@ -241,20 +242,19 @@
                            = new ldf.FragmentsClient(datasources, config);
 
       // Create the iterator to solve the query
-      var resultsIterator;
+      var resultsIterator, resultCount = 0;
       try { resultsIterator = new ldf.SparqlIterator(this.$query.val(), config); }
       catch (error) { return this._stopExecution(error); }
       this._resultsIterator = resultsIterator;
-      resultsIterator.on('end', $.proxy(this._stopExecution, this));
+      resultsIterator.on('data',  function () { resultCount++ });
+      resultsIterator.on('end',   $.proxy(this._stopExecution, this));
       resultsIterator.on('error', $.proxy(this._stopExecution, this));
 
       // Read the iterator's results, and write them depending on the query type
       switch (resultsIterator.queryType) {
         // For SELECT queries, write a JSON array representation of the rows
         case 'SELECT':
-          var resultCount = 0;
           resultsIterator.on('data', function (row) {
-            resultCount++;
             resultsScroller.addContent([lastRow = row]);
           });
           resultsIterator.on('end', function () {
@@ -279,6 +279,18 @@
         default:
           writeResult(resultsIterator.queryType + ' queries are unsupported.');
       }
+
+      // Update result timer
+      var $timing = this.$timing, startTime = new Date();
+      function updateTiming() {
+        $timing.text(resultCount.toLocaleString() + ' result' +
+                     (resultCount === 1 ? '' : 's') + ' in ' +
+                     ((new Date() - startTime) / 1000).toFixed(1) + 's');
+      }
+      updateTiming();
+      resultsIterator.on('end', updateTiming);
+      this._timingUpdater && clearInterval(this._timingUpdater);
+      this._timingUpdater = setInterval(updateTiming, 100);
     },
 
     // Stops query execution
@@ -293,6 +305,7 @@
       error && error.message && this._writeResult(error.message);
       this._writeResult.flush();
       this._writeLog.flush();
+      clearInterval(this._timingUpdater);
     },
 
     // Shows the details panel
