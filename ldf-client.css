@@ -76,6 +76,10 @@ header img {
   height: 81px;
 }
 
+main {
+  clear: both;
+}
+
 fieldset {
   border: none;
   padding: 0;
@@ -89,21 +93,22 @@ ul {
   padding: 0;
   margin: 0;
 }
-li {
-  margin: .5em 0;
+fieldset > ul > li {
+  margin: .3em 0;
+  clear: both;
+}
+fieldset > ul > li:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 select {
-  min-width: 390px;
+  min-width: 430px;
 }
 
 .chosen {
   float: right;
-  margin-bottom: -999999px;
-}
-.chosen-choices {
-  max-height: 36px;
-  transition: max-height .5s;
 }
 
 input.datetime {
@@ -220,16 +225,15 @@ footer {
   }
 
   select {
-    min-width: 260px;
+    min-width: 350px;
   }
-  .chosen {
+  .chosen, input.datetime {
     float: none;
     margin-bottom: 0;
   }
   .details-toggle {
-    float: none;
     display: inline-block;
-    margin: 0 -10px -8px 10px;
+    margin: 0 0 -8px 10px;
   }
 
   .log {
