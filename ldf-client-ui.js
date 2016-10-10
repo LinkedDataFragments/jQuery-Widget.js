@@ -10,28 +10,29 @@
     if (typeof operation !== 'string')
       value = option, option = operation, operation = 'init';
 
-    // Apply the operation to all elements; if one element yields a value, stop and return it
+    // Apply the operation to all elements;
+    // if one element yields a value, stop and return it
     var result = this;
     for (var i = 0; i < this.length && result === this; i++) {
       var $element = $(this[i]), queryui = $element.data('queryui');
       switch (operation) {
-        // initialize the element as a Query UI
-        case 'init':
-          if (!queryui) {
-            $element.data('queryui', queryui = new LdfQueryUI($element, option));
-            queryui._create();
-          }
-          break;
-        // set an option of a Query UI
-        case 'option':
-          if (!queryui) throw new Error('Query UI not activated on this element');
-          // retrieve all options
-          if (option === undefined)     result = queryui.options;
-          // retrieve a specific option
-          else if (value === undefined) result = queryui.options[value];
-          // set a specific option
-          else queryui._setOption(option, value);
-          break;
+      // initialize the element as a Query UI
+      case 'init':
+        if (!queryui) {
+          $element.data('queryui', queryui = new LdfQueryUI($element, option));
+          queryui._create();
+        }
+        break;
+      // set an option of a Query UI
+      case 'option':
+        if (!queryui) throw new Error('Query UI not activated on this element');
+        // retrieve all options
+        if (option === undefined)     result = queryui.options;
+        // retrieve a specific option
+        else if (value === undefined) result = queryui.options[value];
+        // set a specific option
+        else queryui._setOption(option, value);
+        break;
       }
     }
     return result;
@@ -41,9 +42,26 @@
   function LdfQueryUI($element, options) {
     this.element = $element;
     this.options = $.extend({}, this.options, options);
+
+    // Create the query execution Web Worker
+    var self = this;
+    this._queryWorker = new Worker('ldf-client-worker.js');
+    this._queryWorker.onmessage = function (message) {
+      var data = message.data;
+      switch (data.type) {
+      case 'queryInfo': return self._initResults(data.queryType);
+      case 'result':    return self._addResult(data.result);
+      case 'end':       return self._endResults();
+      case 'log':       return self._logAppender(data.log);
+      case 'error':     return this.onerror(data.error);
+      }
+    };
+    this._queryWorker.onerror = function (error) {
+      self._stopExecution(error);
+    };
   }
 
-  $.extend(LdfQueryUI.prototype, {
+  LdfQueryUI.prototype = {
     // Default widget options
     options: {
       datasources: [],
@@ -58,7 +76,6 @@
           $element = this.element,
           $stop = this.$stop = $('.stop', $element),
           $start = this.$start = $('.start', $element),
-          $timing = this.$timing = $('.timing', $element),
           $query = this.$query = $('.queryText', $element),
           $queries = this.$queries = $('.query', $element),
           $log = $('.log', $element),
@@ -95,7 +112,7 @@
       $datetime.change(function () { self._setOption('datetime', $datetime.val()); });
 
       // Set up starting and stopping
-      $start.click(this._execute.bind(this));
+      $start.click(this._startExecution.bind(this));
       $stop.click(this._stopExecution.bind(this));
 
       // Set up details toggling
@@ -106,15 +123,9 @@
       // Set up results
       $results.append($resultsText);
       this._resultsScroller = new FastScroller($results, renderResult);
-      this._writeResult = appenderFor($resultsText);
-
-      // Set up logging
-      var logger = this._logger = new ldf.Logger(),
-          writeLog = this._writeLog = appenderFor($log);
-      ldf.Logger.setLevel('info');
-      logger._print = function (items) {
-        writeLog(items.slice(2).join(' ').trim() + '\n');
-      };
+      this._resultAppender = appenderFor($resultsText);
+      this._logAppender = appenderFor($log);
+      this.$timing = $('.timing', $element);
 
       // Apply all options
       for (var key in options)
@@ -215,97 +226,126 @@
     },
 
     // Starts query execution
-    _execute: function () {
-     var datasources = this.$datasources.val();
+    _startExecution: function () {
+      var datasources = this.$datasources.val();
       if (!datasources || !datasources.length)
         return alert('Please choose a datasource to execute the query.');
 
       // Clear results and log
-      var resultsScroller = this._resultsScroller,
-          writeResult = this._writeResult, writeLog = this._writeLog;
       this.$stop.show();
       this.$start.hide();
-      resultsScroller.removeAll();
-      writeResult.clear();
-      writeLog.clear();
+      this._resultsScroller.removeAll();
+      this._resultAppender.clear();
+      this._logAppender.clear();
 
       // Scroll page to the results
       $('html,body').animate({ scrollTop: this.$start.offset().top });
 
-      // Create a client to fetch the fragments through HTTP
-      var config = {
-        logger: this._logger,
+      // Start the timer
+      this._resultCount = 0;
+      this._startTimer();
+
+      // Let the worker execute the query
+      this._queryWorker.postMessage({
+        type: 'query',
+        query: this.$query.val(),
+        datasources: datasources,
         prefixes: this.options.prefixes,
         datetime: parseDate(this.options.datetime),
-      };
-      this.fragmentsClient = config.fragmentsClient
-                           = new ldf.FragmentsClient(datasources, config);
-
-      // Create the iterator to solve the query
-      var resultsIterator, resultCount = 0;
-      try { resultsIterator = new ldf.SparqlIterator(this.$query.val(), config); }
-      catch (error) { return this._stopExecution(error); }
-      this._resultsIterator = resultsIterator;
-      resultsIterator.on('data',  function () { resultCount++ });
-      resultsIterator.on('end',   $.proxy(this._stopExecution, this));
-      resultsIterator.on('error', $.proxy(this._stopExecution, this));
-
-      // Read the iterator's results, and write them depending on the query type
-      switch (resultsIterator.queryType) {
-        // For SELECT queries, write a JSON array representation of the rows
-        case 'SELECT':
-          resultsIterator.on('data', function (row) {
-            resultsScroller.addContent([lastRow = row]);
-          });
-          resultsIterator.on('end', function () {
-            if (!resultCount)
-              writeResult('This query has no results.');
-          });
-          break;
-        // For CONSTRUCT and DESCRIBE queries, write a Turtle representation of all results
-        case 'CONSTRUCT':
-        case 'DESCRIBE':
-          var writer = new N3.Writer({ write: function (chunk, encoding, done) {
-            writeResult(chunk);
-            done && done();
-          }}, config);
-          resultsIterator.on('data', function (triple) { writer.addTriple(triple); })
-                         .on('end',  function () { writer.end(); });
-          break;
-        // For ASK queries, write whether an answer exists
-        case 'ASK':
-          resultsIterator.on('data', function (exists) { writeResult(exists); });
-          break;
-        default:
-          writeResult(resultsIterator.queryType + ' queries are unsupported.');
-      }
-
-      // Update result timer
-      var $timing = this.$timing, startTime = new Date();
-      function updateTiming() {
-        $timing.text(resultCount.toLocaleString() + ' result' +
-                     (resultCount === 1 ? '' : 's') + ' in ' +
-                     ((new Date() - startTime) / 1000).toFixed(1) + 's');
-      }
-      updateTiming();
-      resultsIterator.on('end', updateTiming);
-      this._timingUpdater && clearInterval(this._timingUpdater);
-      this._timingUpdater = setInterval(updateTiming, 100);
+      });
     },
 
     // Stops query execution
     _stopExecution: function (error) {
+      // Stop the worker and the timer
+      this._queryWorker.postMessage({ type: 'stop' });
+      this._stopTimer();
+
+      // Reset the UI
       this.$stop.hide();
       this.$start.show();
-      this._resultsIterator && this._resultsIterator.removeAllListeners();
-      if (this.fragmentsClient.abortAll)
-        this.fragmentsClient.abortAll();
-      else if (ldf.HttpClient.abortAll)
-        ldf.HttpClient.abortAll();
-      error && error.message && this._writeResult(error.message);
-      this._writeResult.flush();
-      this._writeLog.flush();
-      clearInterval(this._timingUpdater);
+      if (error && error.message)
+        this._resultAppender(error.message);
+      this._resultAppender.flush();
+      this._logAppender.flush();
+      this._writeResult = this._writeEnd = null;
+    },
+
+    // Initializes the result display, depending on the query type
+    _initResults: function (queryType) {
+      var resultAppender = this._resultAppender;
+      switch (queryType) {
+      // For SELECT queries, add the rows to the result
+      case 'SELECT':
+        this._writeResult = function (row) {
+          this._resultsScroller.addContent([row]);
+        };
+        this._writeEnd = function () {
+          if (!this._resultCount)
+            resultAppender('This query has no results.');
+        };
+        break;
+      // For CONSTRUCT and DESCRIBE queries,
+      // write a Turtle representation of the triples
+      case 'CONSTRUCT':
+      case 'DESCRIBE':
+        var writer = new N3.Writer({
+          write: function (chunk, encoding, done) {
+            resultAppender(chunk), done && done();
+          },
+        }, this.options);
+        this._writeResult = function (triple) { writer.addTriple(triple); };
+        this._writeEnd = function () { writer.end(); };
+        break;
+      // For ASK queries, write whether an answer exists
+      case 'ASK':
+        this._writeResult = function (exists) { resultAppender(exists); };
+        this._writeEnd = $.noop;
+        break;
+      // Other queries cannot be displayed
+      default:
+        resultAppender(queryType + ' queries are unsupported.');
+      }
+    },
+
+    // Adds a result to the display
+    _addResult: function (result) {
+      if (this._writeResult) {
+        this._resultCount++;
+        this._writeResult(result);
+      }
+    },
+
+    // Finalizes the display after all results have been added
+    _endResults: function () {
+      if (this._writeEnd) {
+        this._writeEnd();
+        this._stopExecution();
+      }
+    },
+
+    // Starts the results timer
+    _startTimer: function () {
+      this._startTime = new Date();
+      this._stopTimer();
+      this._updateTimer();
+      this._updateTimerHandle = setInterval(this._updateTimer.bind(this), 100);
+    },
+
+    // Updates the result timer
+    _updateTimer: function () {
+      this.$timing.text(this._resultCount.toLocaleString() + ' result' +
+                        (this._resultCount === 1 ? '' : 's') + ' in ' +
+                        ((new Date() - this._startTime) / 1000).toFixed(1) + 's');
+    },
+
+    // Stops the result timer
+    _stopTimer: function () {
+      if (this._updateTimerHandle) {
+        this._updateTimer();
+        clearInterval(this._updateTimerHandle);
+        this._updateTimerHandle = 0;
+      }
     },
 
     // Shows the details panel
@@ -320,7 +360,7 @@
       this.$details.slideUp(150);
       this.$showDetails.removeClass('enabled');
     },
-  });
+  };
 
   // Creates a function that appends text to the given element in a throttled way
   function appenderFor($element) {
