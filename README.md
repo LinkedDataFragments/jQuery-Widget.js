@@ -8,11 +8,9 @@ It allows users to execute SPARQL queries over one or multiple datasets exposed 
 
 ## Using the code
 - Run `npm install` to fetch dependencies and build the browser version of the client code.
-- Place the files from this repository on a local Web server
-  (for instance, by starting a tool such as [adsf](https://github.com/ddfreyne/adsf) in the root folder).
-- Open `index.html` in the browser through your Web server (typically `http://localhost:3000/`).
+- Run `npm start` to run a local Web server.
 - Edit datasources in `settings.json` and queries in the `queries` folder, and run `queries-to-json` to compile both of them in a single JSON file.
-- Run `./build-minified` to generate a production version in the `build` folder.
+- Run `npm run production` to generate a production version in the `build` folder.
 
 ## How the browser client works
 The original _ldf-client_ library is written for the Node.js environment. The [browserify](http://browserify.org/) library makes it compatible with browsers.
@@ -21,7 +19,7 @@ The file `browser.js` makes the Node.js library _ldf-client_ available in global
 <br>
 This script is compiled with its dependencies to `deps/ldf-client-browser.js` via `npm run postinstall`.
 
-You can use the resulting `ldf-client-browser.js` in your browser applications; it is independent of the jQuery UI widget.
+You can use the resulting `deps/ldf-client-browser.js` in your browser applications; it is independent of the jQuery UI widget.
 
 ### _(Optional)_ Running in a Docker container
 
@@ -36,7 +34,7 @@ Next, create a `queries` directory in which you should insert the queries that w
 
 After that, you can run your newly created container in which `settings.json` and `queries` is mounted to the Docker container:
 ```bash
-$ docker run -p 8080:8080 -it --rm -v $(pwd)/settings.json:/tmp/settings.json -v $(pwd)/queries:/tmp/queries ldf-client-widget
+$ docker run -p 3000:3000 -it --rm -v $(pwd)/settings.json:/tmp/settings.json -v $(pwd)/queries:/tmp/queries ldf-client-widget
 ```
 
 ## License

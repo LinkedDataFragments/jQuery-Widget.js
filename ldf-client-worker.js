@@ -1,5 +1,3 @@
-self.importScripts('deps/ldf-client-browser.js');
-
 // The active fragments client and the current results
 var fragmentsClient, resultsIterator;
 

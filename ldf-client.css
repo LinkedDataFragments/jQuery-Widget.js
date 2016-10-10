@@ -134,14 +134,14 @@ input.datetime {
   margin: 0 -35px;
   float: right;
   cursor: pointer;
-  background: url(images/memento.svg) no-repeat center center / contain;
+  background: url(../images/memento.svg) no-repeat center center / contain;
   opacity: .8;
 }
 .details-toggle:hover, .details-toggle.enabled {
   opacity: 1;
 }
 .details-toggle.enabled {
-  background-image: url(images/memento.svg#active);
+  background-image: url(../images/memento.svg#active);
   width: 25px; /* for Chrome */
 }
 
@@ -297,13 +297,9 @@ footer {
   font-size: 13px;
   zoom: 1;
   *display: inline;
-  -webkit-user-select: none;
-  -moz-user-select: none;
   user-select: none;
 }
 .chosen * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
 .chosen .chosen-drop {
@@ -356,7 +352,7 @@ footer {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('images/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../images/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
 }
 .chosen-single .chosen-single abbr:hover {
@@ -374,7 +370,7 @@ footer {
   display: block;
   width: 100%;
   height: 100%;
-  background: url('images/chosen-sprite.png') no-repeat 0px 2px;
+  background: url('../images/chosen-sprite.png') no-repeat 0px 2px;
 }
 .chosen-single .chosen-search {
   position: relative;
@@ -390,8 +386,8 @@ footer {
   height: auto;
   outline: 0;
   border: 1px solid #999999;
-  background: white url('images/chosen-sprite.png') no-repeat 100% -20px;
-  background: url('images/chosen-sprite.png') no-repeat 100% -20px;
+  background: white url('../images/chosen-sprite.png') no-repeat 100% -20px;
+  background: url('../images/chosen-sprite.png') no-repeat 100% -20px;
   font-size: 1em;
   line-height: normal;
   border-radius: 0;
@@ -496,7 +492,7 @@ li.search-choice .search-choice-close {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('images/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../images/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
 }
 li.search-choice .search-choice-close:hover {
@@ -542,7 +538,7 @@ li.search-choice-focus .search-choice-close {
   .chosen-multi .chosen-choices .search-choice .search-choice-close,
   .chosen .chosen-results-scroll-down span,
   .chosen .chosen-results-scroll-up span {
-    background-image: url('images/chosen-sprite@2x.png') !important;
+    background-image: url('../images/chosen-sprite@2x.png') !important;
     background-size: 52px 37px !important;
     background-repeat: no-repeat !important;
   }

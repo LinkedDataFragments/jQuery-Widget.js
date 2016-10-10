@@ -4,18 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Linked Data Fragments client</title>
-  <script src="deps/jquery-2.1.0.js"></script>
-  <script src="deps/chosen-1.1.0.js"></script>
-  <script src="deps/fast-scroller.js"></script>
-  <script src="deps/ldf-client-browser.js"></script>
-  <script src="ldf-client-ui.js"></script>
-  <script src="ldf-client-url-state.js"></script>
-  <script>
-    jQuery(function ($) {
-      $('.ldf-client').queryui({ settings: 'queries.json' });
-    });
-  </script>
-  <link rel=stylesheet href="ldf-client.css">
+  <link rel=stylesheet href="styles/ldf-client.css">
   <link rel=stylesheet href="http://fonts.googleapis.com/css?family=Open+Sans:300,400italic,700italic,400,700">
   <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
 </head>
@@ -80,5 +69,12 @@
       <a href="https://github.com/LinkedDataFragments/jQuery-Widget.js">Source code</a>.
     </p>
   </footer>
+
+  <script src="scripts/ldf-client-ui-packaged.js"></script>
+  <script>
+    jQuery(function ($) {
+      $('.ldf-client').queryui({ settings: 'queries.json' });
+    });
+  </script>
 </body>
 </html>
