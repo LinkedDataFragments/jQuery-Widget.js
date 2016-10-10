@@ -80,7 +80,7 @@
           $queries = this.$queries = $('.query', $element),
           $log = $('.log', $element),
           $results = $('.results', $element),
-          $resultsText = $('<div>', { class: 'text' }),
+          $resultsText = $('<div>', { class: 'text' }),
           $datasources = this.$datasources = $('.datasources', $element),
           $datetime = this.$datetime = $('.datetime', $element),
           $details = this.$details = $('.details', $element),
@@ -97,11 +97,16 @@
         skip_no_results: true, search_contains: true, display_selected_options: false,
         placeholder_text: ' ', create_option_text: 'Add datasource',
       });
-      $datasources.change(function () { self._setOption('selectedDatasources', $datasources.val()); });
+      $datasources.change(function () {
+        self._setOption('selectedDatasources', $datasources.val());
+      });
 
       // When a query is selected, load it into the editor
       $query.edited = $query.val() !== '';
-      $query.change(function () { options.query = $query.val(); $query.edited = true; });
+      $query.change(function () {
+        options.query = $query.val();
+        $query.edited = true;
+      });
       $queries.chosen({ skip_no_results: true, placeholder_text: ' ' });
       $queries.change(function (query) {
         if (query = $queries.val())
@@ -144,7 +149,7 @@
       // Set the datasources available for querying
       case 'datasources':
         // Create options for each datasource
-        $datasources.empty().append((value || []).map(function (datasource, index) {
+        $datasources.empty().append((value || []).map(function (datasource, index) {
           return $('<option>', { text: datasource.name, value: datasource.url });
         }));
         // Restore selected datasources
@@ -165,7 +170,8 @@
         });
         // Add and select chosen datasources that were not in the list yet
         $datasources.append($.map(selected, function (exists, url) {
-          return exists ? null : $('<option>', { text: url, value: url, selected: true });
+          return exists ? null :
+                 $('<option>', { text: url, value: url, selected: true });
         })).trigger('chosen:updated');
         // Update the query set
         this._loadQueries(value);
@@ -186,8 +192,10 @@
       // Set the list of selectable queries
       case 'relevantQueries':
         value = value || [];
-        // Load the first selectable query if the current query was not edited and not in the list
-        if (!this.$query.edited && !value.some(function (v) { return v.sparql === options.query; }))
+        // If the current query was not edited and not in the list,
+        // load the first selectable query
+        if (!this.$query.edited &&
+            !value.some(function (v) { return v.sparql === options.query; }))
           value[0] && this._setOption('query', value[0].sparql);
         // Update the selectable query list
         $queries.empty().append($('<option>'), value.map(function (query) {
@@ -208,11 +216,11 @@
     // Load queries relevant for the given datasources
     _loadQueries: function (datasources) {
       datasources = toHash(datasources);
-      var queries = (this.options.queries || []).filter(function (query, index) {
+      var queries = (this.options.queries || []).filter(function (query, index) {
         query.id = index;
         // Include the query if it indicates no datasources,
         // or if it is relevant for at least one datasource
-        return !query.datasources || !query.datasources.length ||
+        return !query.datasources || !query.datasources.length ||
                query.datasources.some(function (d) { return d in datasources; });
       });
 
@@ -429,23 +437,16 @@
   function parseDate(date) {
     if (date) {
       try { return new Date(Date.parse(date)); }
-      catch (e) { }
+      catch (e) { /* ignore invalid dates */ }
     }
   }
 
   // Transforms a result row into an HTML element
   function renderResult(row, container) {
-    container = container || $('<div>', { 'class': 'result' }).append($('<dl>'))[0];
+    container = container || $('<div>', { class: 'result' }).append($('<dl>'))[0];
     $(container.firstChild).empty().append($.map(row, function (value, variable) {
       return [$('<dt>', { text: variable }), $('<dd>', { html: escape(value) })];
     }));
     return container;
-  };
-
-  // Transforms a log line into an HTML element
-  function renderLogLine(text, element) {
-    element = element || $('<p>')[0];
-    element.innerHTML = escape(text);
-    return element;
-  };
+  }
 })(jQuery);

@@ -30,7 +30,7 @@ jQuery(function ($) {
   function saveStateToUrl() {
     var queryString = [],
         options = $queryui.queryui('option'),
-        datasources = options.selectedDatasources || [],
+        datasources = options.selectedDatasources || [],
         defaultDatasource = (options.datasources[0] || {}).url,
         hasDefaultQuery = options.query === (options.queries[0] || {}).sparql,
         hasDefaultDatasource = datasources.length === 0 ||
@@ -39,7 +39,7 @@ jQuery(function ($) {
     if (!hasDefaultDatasource)
       queryString.push('datasources=' + datasources.map(encodeURIComponent).join(';'));
     if (!hasDefaultQuery)
-      queryString.push('query=' + encodeURIComponent(options.query || ''));
+      queryString.push('query=' + encodeURIComponent(options.query || ''));
     if (options.datetime)
       queryString.push('datetime=' + encodeURIComponent(options.datetime));
 
