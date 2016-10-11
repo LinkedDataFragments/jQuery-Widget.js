@@ -27,9 +27,9 @@ $ docker build -t ldf-client-widget .
 Next, configure your widget by creating a `settings.json` file in your working directory based on the [example](https://github.com/LinkedDataFragments/jQuery-Widget.js/blob/master/settings.json).
 Next, create a `queries` directory in which you should insert the queries that will be present by default in the widget, as is done [here](https://github.com/LinkedDataFragments/jQuery-Widget.js/tree/master/queries).
 
-After that, you can run your newly created container in which `settings.json` and `queries` is mounted to the Docker container:
+After that, you can run your newly created container by mounting your current folder to the Docker container:
 ```bash
-$ docker run -p 3000:3000 -it --rm -v $(pwd)/settings.json:/tmp/settings.json -v $(pwd)/queries:/tmp/queries ldf-client-widget
+$ docker run -p 3000:3000 -it --rm -v $(pwd)/:/tmp/ ldf-client-widget
 ```
 
 ## License
