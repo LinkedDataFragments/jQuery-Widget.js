@@ -13,13 +13,8 @@ It allows users to execute SPARQL queries over one or multiple datasets exposed 
 - Run `npm run production` to generate a production version in the `build` folder.
 
 ## How the browser client works
-The original _ldf-client_ library is written for the Node.js environment. The [browserify](http://browserify.org/) library makes it compatible with browsers.
-
-The file `browser.js` makes the Node.js library _ldf-client_ available in global scope as `ldf`.
-<br>
-This script is compiled with its dependencies to `deps/ldf-client-browser.js` via `npm run postinstall`.
-
-You can use the resulting `deps/ldf-client-browser.js` in your browser applications; it is independent of the jQuery UI widget.
+The original _ldf-client_ library is written for the Node.js environment.
+The [browserify](http://browserify.org/) library makes it compatible with browsers.
 
 ### _(Optional)_ Running in a Docker container
 

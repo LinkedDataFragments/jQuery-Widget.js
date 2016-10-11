@@ -1,5 +1,5 @@
 node_modules
 *.log
 build
-deps/ldf-client-browser.js
+deps/*-browser.js*
 queries.json
