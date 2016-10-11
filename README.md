@@ -1,4 +1,5 @@
 # Linked Data Fragments jQuery Widget
+[![Build Status](https://travis-ci.org/LinkedDataFragments/jQuery-Widget.js.svg?branch=master)](https://travis-ci.org/LinkedDataFragments/jQuery-Widget.js)
 
 **[Try the _Linked Data Fragments jQuery Widget_ online.](http://client.linkeddatafragments.org/)**
 [<img src="http://linkeddatafragments.org/images/logo.svg" width="100" align="right" alt="" />](http://linkeddatafragments.org/)
