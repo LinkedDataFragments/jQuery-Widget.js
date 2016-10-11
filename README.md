@@ -33,7 +33,7 @@ $ docker run -p 3000:3000 -it --rm -v $(pwd)/:/tmp/ ldf-client-widget
 ```
 
 ## License
-The Linked Data Fragments jQuery Widget is written by [Ruben Verborgh](http://ruben.verborgh.org/).
+The Linked Data Fragments jQuery Widget is written by [Ruben Verborgh](https://ruben.verborgh.org/).
 
-This code is copyrighted by [Multimedia Lab – iMinds – Ghent University](http://mmlab.be/)
+This code is copyrighted by [Ghent University – imec](http://idlab.ugent.be/)
 and released under the [MIT license](http://opensource.org/licenses/MIT).

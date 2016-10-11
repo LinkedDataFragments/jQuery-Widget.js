@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
+/*! @license MIT ©2014–2016 Ruben Verborgh, Ghent University – imec */
 /* Merges the queries from the 'queries' folder into 'settings.json'. */
 
 var fs = require('fs'),

@@ -1,4 +1,4 @@
-/*! @license ©2015 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
+/*! @license MIT ©2014–2016 Ruben Verborgh, Ghent University – imec */
 // jQuery widget for Triple Pattern Fragments query execution
 
 (function ($) {

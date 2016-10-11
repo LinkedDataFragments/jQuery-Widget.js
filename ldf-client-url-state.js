@@ -1,4 +1,4 @@
-/*! @license ©2014 Ruben Verborgh - Multimedia Lab / iMinds / Ghent University */
+/*! @license MIT ©2014–2016 Ruben Verborgh, Ghent University – imec */
 /** Loads and stores state of the Triple Pattern Fragments widget using the URL. */
 
 jQuery(function ($) {
