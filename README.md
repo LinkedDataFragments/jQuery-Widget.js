@@ -16,6 +16,13 @@ It allows users to execute SPARQL queries over one or multiple datasets exposed 
 The original _ldf-client_ library is written for the Node.js environment.
 The [browserify](http://browserify.org/) library makes it compatible with browsers.
 
+The query engine itself runs in a background thread
+using [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
+The user interface (`ldf-client-ui.js`)
+instructs the worker (`ldf-client-worker.js`) to evaluate queries
+by sending messages,
+and the worker sends results back.
+
 ### _(Optional)_ Running in a Docker container
 
 If you want to rapidly deploy this widget as a microservice, you can build a [Docker](https://www.docker.com/) container as follows:
