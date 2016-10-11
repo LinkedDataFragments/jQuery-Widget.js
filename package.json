@@ -6,7 +6,7 @@
     "production": "gulp build --production"
   },
   "dependencies": {
-    "ldf-client": "~1.4.0",
+    "ldf-client": "^2.0.1",
     "n3": "^0.8.1"
   },
   "devDependencies": {
