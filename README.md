@@ -1,9 +1,10 @@
 # Linked Data Fragments jQuery Widget
+[<img src="http://linkeddatafragments.org/images/logo.svg" width="200" align="right" alt="" />](http://linkeddatafragments.org/)
+
 [![Build Status](https://travis-ci.org/LinkedDataFragments/jQuery-Widget.js.svg?branch=master)](https://travis-ci.org/LinkedDataFragments/jQuery-Widget.js)
 [![Docker Automated Build](https://img.shields.io/docker/automated/linkeddatafragments/jquery-widget.js.svg)](https://hub.docker.com/r/linkeddatafragments/jquery-widget.js/)
 
 **[Try the _Linked Data Fragments jQuery Widget_ online.](http://client.linkeddatafragments.org/)**
-[<img src="http://linkeddatafragments.org/images/logo.svg" width="100" align="right" alt="" />](http://linkeddatafragments.org/)
 
 This jQuery widget is a browser-based user interface to the [Linked Data Fragments client](https://github.com/LinkedDataFragments/Client).
 It allows users to execute SPARQL queries over one or multiple datasets exposed through a [Triple Pattern Fragments interface](http://www.hydra-cg.com/spec/latest/triple-pattern-fragments/).
