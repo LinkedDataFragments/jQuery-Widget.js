@@ -182,6 +182,15 @@
         break;
       // Set the list of all possible queries
       case 'queries':
+        value.forEach(function (query) {
+          // Create a regex that only matches relevant datasources for this query
+          query.datasourceMatcher =
+            new RegExp('^(?:' + (
+              // Datasource specifications can use '*' to indicate a wildcard,
+              // and specifying no datasources means all datasources match
+              query.datasources.map(toRegExp).join('|').replace(/\\\*|^$/g, '.*')
+            ) + ')$');
+        });
         this._loadQueries(options.selectedDatasources);
         break;
       case 'datetime':
@@ -215,13 +224,11 @@
 
     // Load queries relevant for the given datasources
     _loadQueries: function (datasources) {
-      datasources = toHash(datasources);
       var queries = (this.options.queries || []).filter(function (query, index) {
         query.id = index;
-        // Include the query if it indicates no datasources,
-        // or if it is relevant for at least one datasource
-        return !query.datasources || !query.datasources.length ||
-               query.datasources.some(function (d) { return d in datasources; });
+        // Include the query if it is relevant for at least one datasource
+        return !datasources ||
+               datasources.some(function (d) { return query.datasourceMatcher.test(d); });
       });
 
       // Load the set of queries if it is different from the current set
@@ -423,6 +430,11 @@
     return lt && '&lt;' || gt && '&gt;' || amp && '&amp;' ||
            (url = 'http' + escape(url)) &&
            '<a href="' + url + '" target=_blank>' + url + '</a>';
+  }
+
+  // Escapes the string for usage as a regular expression
+  function toRegExp(string) {
+    return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   }
 
   // Converts the array to a hash with the elements as keys
