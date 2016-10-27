@@ -1,6 +1,5 @@
 # Artists born in York
-# Datasource: http://fragments.dbpedia.org/2014/en
-# Datasource: http://fragments.dbpedia.org/2015/en
+# Datasource: http://fragments.dbpedia.org/*/en
 SELECT ?name ?deathDate WHERE {
   ?person a dbpedia-owl:Artist;
           rdfs:label ?name;

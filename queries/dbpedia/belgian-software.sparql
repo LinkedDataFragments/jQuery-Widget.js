@@ -1,6 +1,5 @@
 # Belgian software
-# Datasource: http://fragments.dbpedia.org/2014/en
-# Datasource: http://fragments.dbpedia.org/2015/en
+# Datasource: http://fragments.dbpedia.org/*/en
 SELECT ?software ?company WHERE {
   ?software dbpedia-owl:developer ?company.
   ?company dbpedia-owl:locationCountry [ rdfs:label "Belgium"@en ].

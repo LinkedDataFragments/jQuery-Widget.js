@@ -1,9 +1,10 @@
-# Bands associated with members of Queen
-# Datasource: http://fragments.dbpedia.org/2014/en
-# Datasource: http://fragments.dbpedia.org/2015/en
-SELECT DISTINCT ?artist ?band WHERE {
+# Other bands of Queen members
+# Datasource: http://fragments.dbpedia.org/*/en
+SELECT DISTINCT ?artist ?band ?bandName WHERE {
   { <http://dbpedia.org/resource/Queen_(band)> dbpedia-owl:bandMember ?artist. }
   UNION
   { <http://dbpedia.org/resource/Queen_(band)> dbpedia-owl:formerBandMember ?artist. }
-  ?artist dbpedia-owl:associatedBand ?band.
+  ?band dbpedia-owl:formerBandMember ?artist;
+        rdfs:label ?bandName.
+  FILTER (?band != <http://dbpedia.org/resource/Queen_(band)>)
 }
