@@ -57,6 +57,7 @@
       }
     };
     this._queryWorker.onerror = function (error) {
+      self._queryWorker.onerror = $.noop;
       self._stopExecution(error);
     };
   }
