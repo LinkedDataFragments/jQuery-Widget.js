@@ -255,7 +255,7 @@
       this._logAppender.clear();
 
       // Scroll page to the results
-      $('html,body').animate({ scrollTop: this.$start.offset().top });
+      $('html,body').animate({ scrollTop: this.$stop.offset().top });
 
       // Start the timer
       this._resultCount = 0;
