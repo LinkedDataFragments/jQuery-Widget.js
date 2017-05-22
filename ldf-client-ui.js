@@ -99,7 +99,13 @@
         placeholder_text: ' ', create_option_text: 'Add datasource',
       });
       $datasources.change(function () {
-        self._setOption('selectedDatasources', $datasources.val());
+        // Inherit the transience of the previous selected datasources
+        var newSelection = toHash($datasources.val());
+        Object.keys(options.selectedDatasources).forEach(function (lastValue) {
+          if (lastValue in newSelection)
+            newSelection[lastValue] = options.selectedDatasources[lastValue];
+        });
+        self._setOption('selectedDatasources', newSelection);
       });
 
       // When a query is selected, load it into the editor
@@ -110,8 +116,13 @@
       });
       $queries.chosen({ skip_no_results: true, placeholder_text: ' ' });
       $queries.change(function (query) {
-        if (query = $queries.val())
+        if ((options.query !== $queries.val()) && (query = $queries.val())) {
           $query.val(options.query = query).edited = false;
+
+          // Set the new selected datasources
+          var newDatasources = self._getHashedQueryDatasources(self._getSelectedQueryId());
+          self._setOption('selectedDatasources', newDatasources);
+        }
       });
 
       // Update datetime on change
@@ -158,15 +169,19 @@
         break;
       // Set the datasources to query
       case 'selectedDatasources':
-        // Choose the first available datasource if none was chosen
+        // If initializing, choose the first available datasource if none was chosen
         var $options = $datasources.children();
-        if (initialize && !(value && value.length) && $options.length)
-          options[key] = value = [$options.val()];
+        if (initialize && !(value && Object.keys(value).length) && $options.length) {
+          options[key] = value = {};
+          value[$options.val()] = true;
+        }
+        var valueKeys = value ? Object.keys(value) : [];
         // Select chosen datasources that were already in the list
-        var selected = toHash(value);
+        var selected = toHash(valueKeys);
         $options.each(function (index) {
           var $option = $(this), url = $(this).val();
-          $option.attr('selected', url in selected);
+          $option.prop('selected', url in selected);
+          $option.toggleClass('search-choice-transient', !!(url in selected && value[url]));
           selected[url] = true;
         });
         // Add and select chosen datasources that were not in the list yet
@@ -183,6 +198,14 @@
         break;
       // Set the list of all possible queries
       case 'queries':
+        // Load the transient datasources for the current query
+        var queryId = this._getSelectedQueryId();
+        if (queryId >= 0) {
+          var newDatasources = this._getHashedQueryDatasources(this._getSelectedQueryId());
+          self._setOption('selectedDatasources', newDatasources);
+        }
+
+        // Set the queries applicable to the set datasources
         value.forEach(function (query) {
           // Create a regex that only matches relevant datasources for this query
           query.datasourceMatcher =
@@ -223,13 +246,97 @@
       }
     },
 
+    // Get the hashed query datasources.
+    // This will map transient datasources to 'true',
+    // and persistent datasources to 'false'.
+    _getHashedQueryDatasources: function (queryId) {
+      var persistedDatasources = this._getPersistedDatasources();
+      var requiredDatasources = this._getQueryDatasources(queryId, persistedDatasources);
+
+      var newDatasources;
+      // Only add transient datasources if the persistent datasources
+      // are a subset of the query's required datasources
+      // Otherwise, keep only the persistent datasources
+      var addTransientDatasources = true;
+      var i;
+      for (i in persistedDatasources) {
+        if (requiredDatasources.indexOf(persistedDatasources[i]) < 0) {
+          addTransientDatasources = false;
+          break;
+        }
+      }
+      if (addTransientDatasources) {
+        newDatasources = toHash(requiredDatasources, true);
+        for (i in persistedDatasources)
+          newDatasources[persistedDatasources[i]] = false;
+      }
+      else
+        newDatasources = toHash(persistedDatasources, false);
+      return newDatasources;
+    },
+
+    // Get the selected datasources that are persistent (i.e., are not transient)
+    _getPersistedDatasources: function () {
+      var persistedDatasources = [];
+      var self = this;
+      Object.keys(this.options.selectedDatasources).forEach(function (url) {
+        if (!self.options.selectedDatasources[url])
+          persistedDatasources.push(url);
+      });
+      return persistedDatasources;
+    },
+
+    // Get the query id of the given query
+    _getSelectedQueryId: function () {
+      var queryId = -1;
+      var self = this;
+      this.options.queries.forEach(function (predefinedQuery, id) {
+        if (predefinedQuery.sparql === self.options.query)
+          queryId = id;
+      });
+      return queryId;
+    },
+
+    // Find the (first matching) datasources that match with the query's datasource pattern
+    // Always first give a preference for persistent datasources if applicable.
+    _getQueryDatasources: function (queryId, persistentDatasources) {
+      persistentDatasources = persistentDatasources || [];
+      var queryDatasourcePatterns = this.options.queries[queryId].datasources;
+      if (!queryDatasourcePatterns.length)
+        queryDatasourcePatterns = ['*'];
+      var datasources = [];
+      var self = this;
+      queryDatasourcePatterns.forEach(function (pattern) {
+        var regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        var selected = false;
+        for (var i = 0; i < persistentDatasources.length; i++) {
+          if (regex.test(persistentDatasources[i])) {
+            datasources.push(persistentDatasources[i]);
+            selected = true;
+            break;
+          }
+        }
+        if (!selected) {
+          for (var datasourceId = 0; datasourceId < self.options.datasources.length; datasourceId++) {
+            var datasource = self.options.datasources[datasourceId];
+            if (regex.test(datasource.url)) {
+              datasources.push(datasource.url);
+              break;
+            }
+          }
+        }
+      });
+      return datasources;
+    },
+
     // Load queries relevant for the given datasources
     _loadQueries: function (datasources) {
       var queries = (this.options.queries || []).filter(function (query, index) {
         query.id = index;
+        var manuallyAddedDatasources = Object.keys(datasources).filter(function (url) { return !datasources[url]; });
         // Include the query if it is relevant for at least one datasource
-        return !datasources ||
-               datasources.some(function (d) { return query.datasourceMatcher.test(d); });
+        return !datasources || !manuallyAddedDatasources.length ||
+               manuallyAddedDatasources.some(function (d) { return !query.datasourceMatcher || query.datasourceMatcher.test(d); });
       });
 
       // Load the set of queries if it is different from the current set
@@ -439,10 +546,10 @@
   }
 
   // Converts the array to a hash with the elements as keys
-  function toHash(array) {
+  function toHash(array, val) {
     var hash = {}, length = array ? array.length : 0;
     for (var i = 0; i < length; i++)
-      hash[array[i]] = false;
+      hash[array[i]] = val;
     return hash;
   }
 

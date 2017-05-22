@@ -18,8 +18,15 @@ jQuery(function ($) {
       if (keyvalue) uiState[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
       return uiState;
     }, {});
-    if (uiState.datasources = uiState.datasources || uiState.startFragment) // backwards compatibility
-      $queryui.queryui('option', 'selectedDatasources', uiState.datasources.split(/[ ,;]+/));
+    if (uiState.datasources = uiState.datasources || uiState.startFragment) { // backwards compatibility
+      var datasources = {};
+      if (uiState.datasources) {
+        uiState.datasources.split(/[ ,;]+/).forEach(function (url) {
+          datasources[url] = false;
+        });
+      }
+      $queryui.queryui('option', 'selectedDatasources', datasources);
+    }
     if (uiState.query)
       $queryui.queryui('option', 'query', uiState.query);
     if (uiState.datetime)
@@ -30,11 +37,13 @@ jQuery(function ($) {
   function saveStateToUrl() {
     var queryString = [],
         options = $queryui.queryui('option'),
-        datasources = options.selectedDatasources || [],
-        defaultDatasource = (options.datasources[0] || {}).url,
+        datasources = Object.keys(options.selectedDatasources || {}).reduce(function (acc, url) {
+          if (!options.selectedDatasources[url])
+            acc.push(url);
+          return acc;
+        }, []),
         hasDefaultQuery = options.query === (options.queries[0] || {}).sparql,
-        hasDefaultDatasource = datasources.length === 0 ||
-                               (datasources.length === 1 && datasources[0] === defaultDatasource);
+        hasDefaultDatasource = datasources.length === 0;
     // Set query string options
     if (!hasDefaultDatasource)
       queryString.push('datasources=' + datasources.map(encodeURIComponent).join(';'));
