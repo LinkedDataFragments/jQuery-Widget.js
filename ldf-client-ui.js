@@ -231,9 +231,11 @@
             !value.some(function (v) { return v.sparql === options.query; }))
           value[0] && this._setOption('query', value[0].sparql);
         // Update the selectable query list
-        $queries.empty().append($('<option>'), value.map(function (query) {
+        $queries.empty().append($('<option>'), options.queries.map(function (query) {
           return $('<option>', { text: query.name, value: query.sparql,
-                                 selected: options.query === query.sparql });
+            selected: options.query === query.sparql })
+            .addClass('query')
+            .toggleClass('query-relevant', value.indexOf(query) >= 0);
         })).trigger('chosen:updated').change();
         break;
       // Load settings from a JSON resource

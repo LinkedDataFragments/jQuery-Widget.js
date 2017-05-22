@@ -424,6 +424,14 @@ li.active-result {
   display: list-item;
   cursor: pointer;
 }
+.query {
+  font-style: italic;
+  color: #777777;
+}
+.query-relevant {
+  font-style: normal;
+  color: #000000;
+}
 li.highlighted {
   background-color: #be1622;
   color: #fff;
