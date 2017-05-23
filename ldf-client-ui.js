@@ -301,25 +301,18 @@
       var datasources = [];
       queryDatasourcePatterns.forEach(function (pattern) {
         var regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        var selected = false;
-        for (var i = 0; i < persistentDatasources.length; i++) {
-          if (regex.test(persistentDatasources[i])) {
-            datasources.push(persistentDatasources[i]);
-            selected = true;
-            break;
-          }
-        }
-        if (!selected) {
-          for (var datasourceId = 0; datasourceId < this.options.datasources.length; datasourceId++) {
-            var datasource = this.options.datasources[datasourceId];
-            if (regex.test(datasource.url)) {
-              datasources.push(datasource.url);
-              break;
-            }
-          }
+        if (!addFirstMatchingDatasourceOf(persistentDatasources, regex)) {
+          addFirstMatchingDatasourceOf(this.options.datasources
+            .map(function (datasource) { return datasource.url; }), regex);
         }
       }, this);
       return datasources;
+
+      function addFirstMatchingDatasourceOf(matchingDatasources, regex) {
+        return Object.keys(matchingDatasources).some(function (i) {
+          return regex.test(matchingDatasources[i]) && datasources.push(matchingDatasources[i]);
+        });
+      }
     },
 
     // Load queries relevant for the given datasources
