@@ -259,17 +259,11 @@
       // Only add transient datasources if the persistent datasources
       // are a subset of the query's required datasources
       // Otherwise, keep only the persistent datasources
-      var addTransientDatasources = true;
-      var i;
-      for (i in persistedDatasources) {
-        if (requiredDatasources.indexOf(persistedDatasources[i]) < 0) {
-          addTransientDatasources = false;
-          break;
-        }
-      }
+      var addTransientDatasources = !Object.keys(persistedDatasources)
+        .some(function (i) { return requiredDatasources.indexOf(persistedDatasources[i]) < 0; });
       if (addTransientDatasources) {
         newDatasources = toHash(requiredDatasources, true);
-        for (i in persistedDatasources)
+        for (var i in persistedDatasources)
           newDatasources[persistedDatasources[i]] = false;
       }
       else
