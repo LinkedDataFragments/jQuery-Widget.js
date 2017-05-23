@@ -29,6 +29,8 @@ function readQueryDirectory(directory) {
       return readQueryDirectory(filename);
     else if (/\.sparql$/.test(filename))
       return readQuery(filename);
+    else
+      return [];
   }));
 }
 
