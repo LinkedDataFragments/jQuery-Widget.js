@@ -22,7 +22,7 @@ jQuery(function ($) {
       var datasources = {};
       if (uiState.datasources) {
         uiState.datasources.split(/[ ,;]+/).forEach(function (url) {
-          datasources[url] = false;
+          datasources[url] = 'persistent';
         });
       }
       $queryui.queryui('option', 'selectedDatasources', datasources);
@@ -38,7 +38,7 @@ jQuery(function ($) {
     var queryString = [],
         options = $queryui.queryui('option'),
         datasources = Object.keys(options.selectedDatasources || {}).reduce(function (acc, url) {
-          if (!options.selectedDatasources[url])
+          if (options.selectedDatasources[url] === 'persistent')
             acc.push(url);
           return acc;
         }, []),

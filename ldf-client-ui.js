@@ -100,7 +100,7 @@
       });
       $datasources.change(function () {
         // Inherit the transience of the previous selected datasources
-        var newSelection = toHash($datasources.val());
+        var newSelection = toHash($datasources.val(), 'persistent');
         Object.keys(options.selectedDatasources).forEach(function (lastValue) {
           if (lastValue in newSelection)
             newSelection[lastValue] = options.selectedDatasources[lastValue];
@@ -173,15 +173,15 @@
         var $options = $datasources.children();
         if (initialize && !(value && Object.keys(value).length) && $options.length) {
           options[key] = value = {};
-          value[$options.val()] = true;
+          value[$options.val()] = 'transient';
         }
         var valueKeys = value ? Object.keys(value) : [];
         // Select chosen datasources that were already in the list
-        var selected = toHash(valueKeys);
+        var selected = toHash(valueKeys, 'persistent');
         $options.each(function (index) {
           var $option = $(this), url = $(this).val();
           $option.prop('selected', url in selected);
-          $option.toggleClass('search-choice-transient', !!(url in selected && value[url]));
+          $option.toggleClass('search-choice-transient', !!(url in selected && value[url] === 'transient'));
           selected[url] = true;
         });
         // Add and select chosen datasources that were not in the list yet
@@ -249,8 +249,8 @@
     },
 
     // Get the hashed query datasources.
-    // This will map transient datasources to 'true',
-    // and persistent datasources to 'false'.
+    // This will map transient datasources to 'transient',
+    // and persistent datasources to 'persistent'.
     _getHashedQueryDatasources: function (queryId) {
       var persistedDatasources = this._getPersistedDatasources();
       var requiredDatasources = this._getQueryDatasources(queryId, persistedDatasources);
@@ -262,12 +262,12 @@
       var addTransientDatasources = !Object.keys(persistedDatasources)
         .some(function (i) { return requiredDatasources.indexOf(persistedDatasources[i]) < 0; });
       if (addTransientDatasources) {
-        newDatasources = toHash(requiredDatasources, true);
+        newDatasources = toHash(requiredDatasources, 'transient');
         for (var i in persistedDatasources)
-          newDatasources[persistedDatasources[i]] = false;
+          newDatasources[persistedDatasources[i]] = 'persistent';
       }
       else
-        newDatasources = toHash(persistedDatasources, false);
+        newDatasources = toHash(persistedDatasources, 'persistent');
       return newDatasources;
     },
 
@@ -275,7 +275,7 @@
     _getPersistedDatasources: function () {
       var persistedDatasources = [];
       Object.keys(this.options.selectedDatasources).forEach(function (url) {
-        if (!this.options.selectedDatasources[url])
+        if (this.options.selectedDatasources[url] === 'persistent')
           persistedDatasources.push(url);
       }, this);
       return persistedDatasources;
@@ -319,10 +319,11 @@
     _loadQueries: function (datasources) {
       var queries = (this.options.queries || []).filter(function (query, index) {
         query.id = index;
-        var manuallyAddedDatasources = Object.keys(datasources).filter(function (url) { return !datasources[url]; });
+        var manuallyAddedDatasources = Object.keys(datasources)
+          .filter(function (url) { return datasources[url] === 'persistent'; });
         // Include the query if it is relevant for at least one datasource
-        return !datasources || !manuallyAddedDatasources.length ||
-               manuallyAddedDatasources.some(function (d) { return !query.datasourceMatcher || query.datasourceMatcher.test(d); });
+        return !datasources || !manuallyAddedDatasources.length || manuallyAddedDatasources
+            .some(function (d) { return !query.datasourceMatcher || query.datasourceMatcher.test(d); });
       });
 
       // Load the set of queries if it is different from the current set
