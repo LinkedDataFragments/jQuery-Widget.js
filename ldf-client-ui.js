@@ -274,22 +274,20 @@
     // Get the selected datasources that are persistent (i.e., are not transient)
     _getPersistedDatasources: function () {
       var persistedDatasources = [];
-      var self = this;
       Object.keys(this.options.selectedDatasources).forEach(function (url) {
-        if (!self.options.selectedDatasources[url])
+        if (!this.options.selectedDatasources[url])
           persistedDatasources.push(url);
-      });
+      }, this);
       return persistedDatasources;
     },
 
     // Get the query id of the given query
     _getSelectedQueryId: function () {
       var queryId = -1;
-      var self = this;
       this.options.queries.forEach(function (predefinedQuery, id) {
-        if (predefinedQuery.sparql === self.options.query)
+        if (predefinedQuery.sparql === this.options.query)
           queryId = id;
-      });
+      }, this);
       return queryId;
     },
 
@@ -301,7 +299,6 @@
       if (!queryDatasourcePatterns.length)
         queryDatasourcePatterns = ['*'];
       var datasources = [];
-      var self = this;
       queryDatasourcePatterns.forEach(function (pattern) {
         var regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
         var selected = false;
@@ -313,15 +310,15 @@
           }
         }
         if (!selected) {
-          for (var datasourceId = 0; datasourceId < self.options.datasources.length; datasourceId++) {
-            var datasource = self.options.datasources[datasourceId];
+          for (var datasourceId = 0; datasourceId < this.options.datasources.length; datasourceId++) {
+            var datasource = this.options.datasources[datasourceId];
             if (regex.test(datasource.url)) {
               datasources.push(datasource.url);
               break;
             }
           }
         }
-      });
+      }, this);
       return datasources;
     },
 
