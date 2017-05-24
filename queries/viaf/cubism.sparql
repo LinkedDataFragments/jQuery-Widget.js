@@ -1,4 +1,4 @@
-# 5. Works by Cubists (DBpedia & VIAF)
+# 5. Works by Cubists
 # Datasources: http://fragments.dbpedia.org/*/en http://data.linkeddatafragments.org/viaf
 SELECT ?name ?work ?title {
   ?artist dbpedia-owl:movement [ rdfs:label "Cubism"@en ];
