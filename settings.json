@@ -27,6 +27,10 @@
     {
       "name": "Virtual International Authority File (VIAF)",
       "url": "http://data.linkeddatafragments.org/viaf"
+    },
+    {
+      "name": "Harvard Library",
+      "url": "http://data.linkeddatafragments.org/harvard"
     }
   ],
   "prefixes": {
