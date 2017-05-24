@@ -424,17 +424,16 @@ li.active-result {
   display: list-item;
   cursor: pointer;
 }
-.query {
-  font-style: italic;
-  color: #777777;
-}
-.query-relevant {
+li.query {
   font-style: normal;
   color: #000000;
 }
+li.query:not(.query-relevant) {
+  color: #777777;
+}
 li.highlighted {
   background-color: #be1622;
-  color: #fff;
+  color: #fff !important;
 }
 li.no-results {
   display: none;
