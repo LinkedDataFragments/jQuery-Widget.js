@@ -182,11 +182,11 @@
           var $option = $(this), url = $(this).val();
           $option.prop('selected', url in selected);
           $option.toggleClass('search-choice-transient', !!(url in selected && value[url] === 'transient'));
-          selected[url] = true;
+          selected[url] = 'default';
         });
         // Add and select chosen datasources that were not in the list yet
         $datasources.append($.map(selected, function (exists, url) {
-          return exists ? null :
+          return exists === 'default' ? null :
                  $('<option>', { text: url, value: url, selected: true });
         })).trigger('chosen:updated');
         // Update the query set
