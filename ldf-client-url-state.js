@@ -18,11 +18,16 @@ jQuery(function ($) {
       if (keyvalue) uiState[decodeURIComponent(keyvalue[1])] = decodeURIComponent(keyvalue[2]);
       return uiState;
     }, {});
-    if (uiState.datasources = uiState.datasources || uiState.startFragment) { // backwards compatibility
+    if ((uiState.datasources = uiState.datasources || uiState.startFragment) || uiState.transientDatasources) { // backwards compatibility
       var datasources = {};
       if (uiState.datasources) {
         uiState.datasources.split(/[ ,;]+/).forEach(function (url) {
           datasources[url] = 'persistent';
+        });
+      }
+      if (uiState.transientDatasources) {
+        uiState.transientDatasources.split(/[ ,;]+/).forEach(function (url) {
+          datasources[url] = 'transient';
         });
       }
       $queryui.queryui('option', 'selectedDatasources', datasources);
@@ -39,15 +44,16 @@ jQuery(function ($) {
       return;
     var queryString = [],
         options = $queryui.queryui('option'),
-        datasources = Object.keys(options.selectedDatasources || {}).reduce(function (acc, url) {
-          acc.push(url);
-          return acc;
-        }, []),
-        hasDefaultQuery = options.query === (options.queries[0] || {}).sparql,
-        hasDefaultDatasource = datasources.length === 0;
+        datasources = { persistent: [], transient: [] },
+        hasDefaultQuery = options.query === (options.queries[0] || {}).sparql;
+    Object.keys(options.selectedDatasources || {}).forEach(function (url) {
+      datasources[options.selectedDatasources[url]].push(url);
+    });
     // Set query string options
-    if (!hasDefaultDatasource)
-      queryString.push('datasources=' + datasources.map(encodeURIComponent).join(';'));
+    if (datasources.persistent.length !== 0)
+      queryString.push('datasources=' + datasources.persistent.map(encodeURIComponent).join(';'));
+    if (datasources.transient.length !== 0)
+      queryString.push('transientDatasources=' + datasources.transient.map(encodeURIComponent).join(';'));
     if (!hasDefaultQuery)
       queryString.push('query=' + encodeURIComponent(options.query || ''));
     if (options.datetime)
