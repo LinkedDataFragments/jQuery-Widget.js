@@ -76,7 +76,7 @@ gulp.task('scripts:ui', ['deps:n3'], function (done) {
       'src/ldf-client-url-state.js',
     ], { base: './' }),
     sourcemaps.init({ loadMaps: true }),
-    concat('ldf-client-ui-packaged.js'),
+    concat('ldf-client-ui.min.js'),
     production ? uglify({ output: { comments: saveLicense } }) : util.noop(),
     sourcemaps.write('./', { sourceRoot: '../' }),
     gulp.dest('build/scripts'),
@@ -92,7 +92,7 @@ gulp.task('scripts:worker', ['deps:ldf-client'], function (done) {
       'src/ldf-client-worker.js',
     ], { base: './' }),
     sourcemaps.init({ loadMaps: true }),
-    concat('ldf-client-worker.js'),
+    concat('ldf-client-worker.min.js'),
     // Correct lodash from window (browser) to self (Web Worker)
     replace(/var root =.*;/, 'var root = self;'),
     production ? uglify({ output: { comments: saveLicense } }) : util.noop(),

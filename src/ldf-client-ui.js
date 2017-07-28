@@ -45,7 +45,7 @@
 
     // Create the query execution Web Worker
     var self = this;
-    this._queryWorker = new Worker('scripts/ldf-client-worker.js');
+    this._queryWorker = new Worker('scripts/ldf-client-worker.min.js');
     this._queryWorker.onmessage = function (message) {
       var data = message.data;
       switch (data.type) {
