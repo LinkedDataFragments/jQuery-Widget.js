@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "lint": "eslint *.js",
+    "lint": "eslint *.js src/*.js",
     "start": "gulp",
     "build": "gulp build",
     "production": "gulp build --production"

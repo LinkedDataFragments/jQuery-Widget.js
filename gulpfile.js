@@ -25,8 +25,8 @@ gulp.task('default', ['build'], function () {
     server: { baseDir: 'build' },
   });
   gulp.watch('*.html', ['html']);
-  gulp.watch('*.js',   ['scripts']);
-  gulp.watch('*.css',  ['styles']);
+  gulp.watch('src/*', ['scripts']);
+  gulp.watch('styles/*', ['styles']);
   gulp.watch(['*.json', 'queries/**/*.sparql'], ['queries']);
 });
 
@@ -71,8 +71,8 @@ gulp.task('scripts:ui', ['deps:n3'], function (done) {
       'deps/chosen-1.1.0.js',
       'deps/fast-scroller.js',
       'deps/n3-browser.js',
-      'ldf-client-ui.js',
-      'ldf-client-url-state.js',
+      'src/ldf-client-ui.js',
+      'src/ldf-client-url-state.js',
     ], { base: './' }),
     sourcemaps.init({ loadMaps: true }),
     concat('ldf-client-ui-packaged.js'),
@@ -88,7 +88,7 @@ gulp.task('scripts:worker', ['deps:ldf-client'], function (done) {
   pump([
     gulp.src([
       'deps/ldf-client-browser.js',
-      'ldf-client-worker.js',
+      'src/ldf-client-worker.js',
     ], { base: './' }),
     sourcemaps.init({ loadMaps: true }),
     concat('ldf-client-worker.js'),
@@ -139,7 +139,7 @@ function browerifyDependency(name, entry, options, done) {
 // Create build/styles/*.css with source map
 gulp.task('styles', function (done) {
   pump([
-    gulp.src('*.css'),
+    gulp.src('styles/*.css'),
     postcss([
       autoprefixer,
       csso,
