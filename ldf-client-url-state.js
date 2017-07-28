@@ -4,7 +4,7 @@
 jQuery(function ($) {
   var $queryui = $('.ldf-client').one('changeQuerySet', function () {
     // Restore the UI state upon entering and when the URL changes
-    loadStateFromUrl();
+    $(window).on('load', loadStateFromUrl);
     $(window).on('popstate', loadStateFromUrl);
     // Store the UI state in the URL when the UI changes
     if (history.replaceState)
@@ -35,6 +35,8 @@ jQuery(function ($) {
 
   // Stores the current UI state in the URL
   function saveStateToUrl() {
+    if (document.readyState !== 'complete')
+      return;
     var queryString = [],
         options = $queryui.queryui('option'),
         datasources = Object.keys(options.selectedDatasources || {}).reduce(function (acc, url) {
