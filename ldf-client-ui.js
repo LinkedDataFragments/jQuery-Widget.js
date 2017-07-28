@@ -187,7 +187,7 @@
         // Add and select chosen datasources that were not in the list yet
         $datasources.append($.map(selected, function (exists, url) {
           return exists === 'default' ? null :
-                 $('<option>', { text: url, value: url, selected: true });
+            $('<option>', { text: url, value: url, selected: true });
         })).trigger('chosen:updated');
         // Update the query set
         this._loadQueries(value);
@@ -329,7 +329,7 @@
           .filter(function (url) { return datasources[url] === 'persistent'; });
         // Include the query if it is relevant for at least one datasource
         return !datasources || !manuallyAddedDatasources.length || manuallyAddedDatasources
-            .some(function (d) { return !query.datasourceMatcher || query.datasourceMatcher.test(d); });
+          .some(function (d) { return !query.datasourceMatcher || query.datasourceMatcher.test(d); });
       });
 
       // Load the set of queries if it is different from the current set
