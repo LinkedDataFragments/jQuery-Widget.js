@@ -13,6 +13,7 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     sync = require('browser-sync').create(),
     uglify = require('gulp-uglify'),
+    saveLicense = require('uglify-save-license'),
     util = require('gulp-util');
 
 var production = util.env.production;
@@ -76,7 +77,7 @@ gulp.task('scripts:ui', ['deps:n3'], function (done) {
     ], { base: './' }),
     sourcemaps.init({ loadMaps: true }),
     concat('ldf-client-ui-packaged.js'),
-    production ? uglify({ preserveComments: 'license' }) : util.noop(),
+    production ? uglify({ output: { comments: saveLicense } }) : util.noop(),
     sourcemaps.write('./', { sourceRoot: '../' }),
     gulp.dest('build/scripts'),
     sync.stream(),
@@ -94,7 +95,7 @@ gulp.task('scripts:worker', ['deps:ldf-client'], function (done) {
     concat('ldf-client-worker.js'),
     // Correct lodash from window (browser) to self (Web Worker)
     replace(/var root =.*;/, 'var root = self;'),
-    production ? uglify({ preserveComments: 'license' }) : util.noop(),
+    production ? uglify({ output: { comments: saveLicense } }) : util.noop(),
     sourcemaps.write('./', { sourceRoot: '../' }),
     gulp.dest('build/scripts'),
     sync.stream(),

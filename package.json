@@ -25,6 +25,7 @@
     "postcss-csso": "^2.0.0",
     "pre-commit": "^1.2.2",
     "pump": "^1.0.2",
+    "uglify-save-license": "^0.4.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
