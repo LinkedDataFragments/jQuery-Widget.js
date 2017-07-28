@@ -40,8 +40,7 @@ jQuery(function ($) {
     var queryString = [],
         options = $queryui.queryui('option'),
         datasources = Object.keys(options.selectedDatasources || {}).reduce(function (acc, url) {
-          if (options.selectedDatasources[url] === 'persistent')
-            acc.push(url);
+          acc.push(url);
           return acc;
         }, []),
         hasDefaultQuery = options.query === (options.queries[0] || {}).sparql,

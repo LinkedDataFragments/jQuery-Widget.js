@@ -195,6 +195,7 @@
       // Set the query
       case 'query':
         this.$query.val(value).change();
+        this._refreshQueries($queries);
         break;
       // Set the list of all possible queries
       case 'queries':
@@ -230,13 +231,7 @@
         if (!this.$query.edited &&
             !value.some(function (v) { return v.sparql === options.query; }))
           value[0] && this._setOption('query', value[0].sparql);
-        // Update the selectable query list
-        $queries.empty().append($('<option>'), options.queries.map(function (query) {
-          return $('<option>', { text: query.name, value: query.sparql,
-            selected: options.query === query.sparql })
-            .addClass('query')
-            .toggleClass('query-relevant', value.indexOf(query) >= 0);
-        })).trigger('chosen:updated').change();
+        this._refreshQueries($queries);
         break;
       // Load settings from a JSON resource
       case 'settings':
@@ -313,6 +308,17 @@
           return regex.test(matchingDatasources[i]) && datasources.push(matchingDatasources[i]);
         });
       }
+    },
+
+    // Update the selectable query list
+    _refreshQueries: function (queries) {
+      var options = this.options;
+      queries.empty().append($('<option>'), options.queries.map(function (query) {
+        return $('<option>', { text: query.name, value: query.sparql,
+          selected: options.query === query.sparql })
+          .addClass('query')
+          .toggleClass('query-relevant', options.relevantQueries.indexOf(query) >= 0);
+      })).trigger('chosen:updated').change();
     },
 
     // Load queries relevant for the given datasources
