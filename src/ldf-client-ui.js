@@ -238,6 +238,7 @@
         $.getJSON(value, function (settings) {
           for (var key in settings)
             self._setOption(key, settings[key]);
+          self.element.trigger('settingsUpdated');
         });
         break;
       }
@@ -337,7 +338,6 @@
       if (this._querySetId !== querySetId) {
         this._querySetId = querySetId;
         this._setOption('relevantQueries', queries);
-        this.element.trigger('changeQuerySet');
       }
     },
 
