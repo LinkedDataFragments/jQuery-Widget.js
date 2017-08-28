@@ -160,6 +160,23 @@
       switch (key) {
       // Set the datasources available for querying
       case 'datasources':
+        // Validate datasources object, each URL can only occur once
+        var datasourceDict = {};
+        value.forEach(function (datasource, index) {
+          if (!datasource.name)
+            throw new Error('Invalid datasource configuration: No "name" entry was found for datasource ' + index);
+          if (!datasource.url) {
+            throw new Error('Invalid datasource configuration: No "url" entry was found for datasource "' +
+              datasource.name + '"');
+          }
+          if (datasourceDict[datasource.url]) {
+            throw new Error('Invalid datasource configuration: Each URL can only occur once in the datasource list, ' +
+              'but found "' + datasource.url + '" in datasources "' + datasourceDict[datasource.url] +
+              '" and "' + datasource.name + '"');
+          }
+          datasourceDict[datasource.url] = datasource.name;
+        });
+
         // Create options for each datasource
         $datasources.empty().append((value || []).map(function (datasource, index) {
           return $('<option>', { text: datasource.name, value: datasource.url });
