@@ -1,0 +1,10 @@
+# Directors of movies starring Brad Pitt in Wikidata
+# Datasource: https://query.wikidata.org/bigdata/ldf
+SELECT ?movie ?title ?name
+WHERE {
+  ?movie wdt:P161 [ rdfs:label "Brad Pitt"@en ];
+         rdfs:label ?title;
+         wdt:P57 [ rdfs:label ?name ].
+  FILTER LANGMATCHES(LANG(?title), "EN")
+  FILTER LANGMATCHES(LANG(?name),  "EN")
+}

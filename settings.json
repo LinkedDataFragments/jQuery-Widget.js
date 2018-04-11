@@ -31,6 +31,10 @@
     {
       "name": "Harvard Library",
       "url": "http://data.linkeddatafragments.org/harvard"
+    },
+    {
+      "name": "Wikidata",
+      "url": "https://query.wikidata.org/bigdata/ldf"
     }
   ],
   "prefixes": {
@@ -44,7 +48,9 @@
     "dbpedia":     "http://dbpedia.org/resource/",
     "dbpedia-owl": "http://dbpedia.org/ontology/",
     "dbpprop":     "http://dbpedia.org/property/",
-    "schema":      "http://schema.org/"
+    "schema":      "http://schema.org/",
+    "wd":          "http://www.wikidata.org/entity/",
+    "wdt":         "http://www.wikidata.org/prop/direct/"
   },
   "queries": "(Will be generated from the 'queries' folder by running the './queries-to-json' script.)"
 }
