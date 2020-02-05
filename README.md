@@ -1,3 +1,7 @@
+# This project has been deprecated in favor of [Comunica's jQuery Widget](https://github.com/comunica/jQuery-Widget.js), which is part of the [Comunica](https://github.com/comunica/comunica) platform. It can do everything this jQuery-Widget.js can do, and more.
+
+-----
+
 # Linked Data Fragments jQuery Widget
 [<img src="http://linkeddatafragments.org/images/logo.svg" width="200" align="right" alt="" />](http://linkeddatafragments.org/)
 
